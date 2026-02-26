@@ -19,8 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (app()->environment('production')) {
+        // Yeh line Laravel ko batati hai ke hamesha HTTPS use kare
+    if (app()->environment('production') || env('APP_ENV') === 'production') {
         URL::forceScheme('https');
     }
     }
+    
 }
