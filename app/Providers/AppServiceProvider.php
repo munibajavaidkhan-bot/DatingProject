@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL; // Yeh line miss thi!
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,10 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Yeh line Laravel ko batati hai ke hamesha HTTPS use kare
-    if (app()->environment('production') || env('APP_ENV') === 'production') {
-        URL::forceScheme('https');
+        // Force HTTPS in production
+        if (app()->environment('production') || env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
     }
-    }
-    
 }
