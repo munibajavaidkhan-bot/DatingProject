@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->trustProxies(at: '*');
     $middleware->trustHosts(at: ['datingproject-production.up.railway.app']); // Apni app ka link yahan dalein
 })
-})
+
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
