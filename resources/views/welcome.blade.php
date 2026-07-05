@@ -74,29 +74,17 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#home">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Services
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                            <li><a class="dropdown-item" href="#">Logo Design</a></li>
-                            <li><a class="dropdown-item" href="#">Web Development</a></li>
-                            <li><a class="dropdown-item" href="#">SEO Services</a></li>
-                            <li><a class="dropdown-item" href="#">Mobile Apps</a></li>
-                            <li><a class="dropdown-item" href="#">Video Animation</a></li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">How It Works</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Reseller</a>
+                        <a class="nav-link" href="#features">Features</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Portfolio</a>
+                        <a class="nav-link" href="#testimonials">Success Stories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Culture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
+                        <a class="nav-link" href="{{ route('terms') }}">Legal</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link btn-primary" href="{{ url('/login') }}">My Account</a>
@@ -171,7 +159,7 @@
         </section>
 
         <!-- Steps Section -->
-        <section class="philosophywrp">
+        <section class="philosophywrp" id="how-it-works">
             <div class="container">
                 <div class="section-title">
                     <h2 class="wow animate-slide-up" data-wow-duration="1s">How It Works: <span>3 Simple Steps</span></h2>
@@ -213,7 +201,7 @@
                     <div class="col-lg-8 text-center">
                         <h2 class="wow animate-slide-up" data-wow-duration="1s">Ready to start your 52‑week Journey?</h2>
                         <p class="wow animate-slide-up" data-wow-duration="1s" data-wow-delay="0.2s">Sign up now and take the first step towards a meaningful connection that could change your life forever.</p>
-                        <a href="#" class="btn btn-primary btn-lg wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.4s">
+                        <a href="{{ route('register') }}" class="btn btn-primary btn-lg wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.4s">
                             Join Free Today
                         </a>
                     </div>
@@ -238,6 +226,10 @@
                             <p class="main-pera">Create an account today and start discovering the perfect partner who truly aligns with your personality, interests, and preferences.</p>
                             <p class="main-pera">By joining our platform, you get access to genuine profiles, smart matching tools, and a safe space to connect with people who share your values.</p>
                             <p class="main-pera">Sign up now for free and begin your journey toward building deep, meaningful, and lasting connections.</p>
+                            <div class="mt-4">
+                                <a href="{{ route('register') }}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold" style="margin-right:12px;">Join Free Today</a>
+                                <a href="{{ url('/login') }}" class="btn btn-outline-secondary px-4 py-3 rounded-pill fw-semibold">Sign In</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -254,7 +246,7 @@
           <p class="main-pera">Welcome to this amazing invention by Love! Here, you'll discover smarter ways to navigate relationships, build stronger connections, and truly understand the language of love. Get ready for a journey that brings clarity, joy, and emotional growth.</p>
         </div>
         <div class="btnwrp wow fadeInLeft" data-wow-duration="1s" data-wow-delay="0.3s">
-          <a class="btn-1" href="javascript:;">Get Started Now</a>
+          <a class="btn-1" href="{{ route('register') }}">Get Started Now</a>
         </div>
       </div>
       <div class="col-md-8">
@@ -313,7 +305,7 @@
 </section>
 
         <!-- Features Grid -->
-        <section class="vacanciewrp">
+        <section class="vacanciewrp" id="features">
             <div class="container">
                 <div class="section-title">
                     <h2 class="wow animate-slide-up" data-wow-duration="1s">The #1 Trusted <span>Dating Platform</span></h2>
@@ -360,7 +352,7 @@
         </section>
 
         <!-- Testimonials -->
-        <section class="testiwrp">
+        <section class="testiwrp" id="testimonials">
             <div class="container">
                 <div class="section-title">
                     <h2 class="text-white">What They're <span>Saying</span></h2>
@@ -478,13 +470,13 @@
                     
                     <div class="col-lg-2 col-md-6">
                         <div class="footer-widget">
-                            <h4>Services</h4>
+                            <h4>Features</h4>
                             <ul>
-                                <li><a href="#">Logo Design</a></li>
-                                <li><a href="#">Web Development</a></li>
-                                <li><a href="#">SEO Services</a></li>
-                                <li><a href="#">Mobile Apps</a></li>
-                                <li><a href="#">Video Animation</a></li>
+                                <li><a href="#">52 Weekly Lessons</a></li>
+                                <li><a href="#">Love Quiz</a></li>
+                                <li><a href="#">Personality Matches</a></li>
+                                <li><a href="#">Social Corner</a></li>
+                                <li><a href="#">Private Journals</a></li>
                             </ul>
                         </div>
                     </div>
@@ -514,12 +506,12 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p class="mb-0">© 2018-2025 The Love Project. All rights reserved.</p>
+                        <p class="mb-0">© 2018-2026 The Love Project. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <ul>
-                            <li><a href="#">Terms</a></li>
-                            <li><a href="#">Privacy</a></li>
+                            <li><a href="{{ route('terms') }}">Terms</a></li>
+                            <li><a href="{{ route('privacy') }}">Privacy</a></li>
                             <li><a href="#">Cookies</a></li>
                         </ul>
                     </div>

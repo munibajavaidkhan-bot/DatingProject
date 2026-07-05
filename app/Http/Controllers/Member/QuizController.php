@@ -3,108 +3,203 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\QuizQuestion;
 use App\Models\QuizAnswer;
+use App\Models\Profile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {
-    /**
-     * Start the quiz, usually redirects to quiz/1.
-     */
-    public function index()
+    public function welcome()
     {
-        // Redirect to the first question page (quiz.show with ID 1)
-        return redirect()->route('quiz.show', 1);
+        $user          = Auth::user();
+        $answeredCount = QuizAnswer::where('user_id', $user->id)->count();
+        $totalCount    = QuizQuestion::where('is_active', true)->count();
+        $isCompleted   = $user->hasCompletedQuiz();
+
+        return view('user.quiz-welcome', compact('user', 'answeredCount', 'totalCount', 'isCompleted'));
     }
 
-    /**
-     * Display the specified question by its sequential number (1, 2, 3...).
-     */
-    public function show($id) // $id is the sequential number (1, 2, 3...)
+    public function start()
     {
-        $number = (int)$id; 
-        $totalQuestions = QuizQuestion::count();
+        $user = Auth::user();
 
-        // Check if the requested number is valid (should not be 0 or too high)
-        if ($number < 1 || $number > $totalQuestions) {
-            // Agar user ne galat URL enter kiya
-            if ($number > $totalQuestions) {
-                return redirect()->route('user.dashboard')->with('success', 'Quiz completed!');
-            }
-            abort(404, 'Invalid Quiz Question Number.');
-        }
+        // Find first unanswered question
+        $answeredIds = QuizAnswer::where('user_id', $user->id)
+            ->pluck('question_id');
 
-        // 1. Fetch the question based on its sequential position (OFFSET)
-        // orderBy('id') ensures we always follow the creation order.
-        // skip($number - 1) makes sure if $number=1, offset is 0 (first question)
-        $question = QuizQuestion::orderBy('id')
-                                ->skip($number - 1)
-                                ->first();
+        $question = QuizQuestion::where('is_active', true)
+            ->whereNotIn('id', $answeredIds)
+            ->orderBy('sort_order')
+            ->first();
 
-        // 2. Fallback check (though unlikely with the above check)
+        // All done
         if (!$question) {
-            abort(404, 'Question not found in the sequence.');
+            return redirect()->route('member.quiz.results');
         }
-        
-        // 3. Get the user's previous answer (for pre-filling/editing)
-        $userAnswer = QuizAnswer::where('user_id', Auth::id())
-                                ->where('question_id', $question->id)
-                                ->first();
 
-        // 4. Save current position in session (optional, for resume logic)
-        session(['quiz_current' => $number]);
+        $totalCount    = QuizQuestion::where('is_active', true)->count();
+        $answeredCount = $answeredIds->count();
+        $progress      = $totalCount > 0 ? round(($answeredCount / $totalCount) * 100) : 0;
 
-        // 5. Load the view
-        return view('user.quiz', [
-            'question' => $question,
-            'current' => $number,
-            'totalQuestions' => $totalQuestions,
-            'userAnswer' => $userAnswer,
-        ]);
+        // Group questions by category for progress display
+        $categories = QuizQuestion::where('is_active', true)
+            ->selectRaw('category, count(*) as total')
+            ->groupBy('category')
+            ->get();
+
+        $answeredByCategory = QuizAnswer::where('user_id', $user->id)
+            ->join('quiz_questions', 'quiz_answers.question_id', '=', 'quiz_questions.id')
+            ->selectRaw('quiz_questions.category, count(*) as answered')
+            ->groupBy('quiz_questions.category')
+            ->pluck('answered', 'category');
+
+        return view('user.quiz', compact(
+            'question', 'totalCount', 'answeredCount',
+            'progress', 'categories', 'answeredByCategory'
+        ));
     }
 
-    /**
-     * Store the answer and redirect to the next question.
-     */
-    public function store(Request $request)
+    public function saveAnswer(Request $request)
     {
         $request->validate([
-            'question_id' => 'required|exists:quiz_questions,id',
-            'current' => 'required|integer|min:1', // Ensure current question number is passed
+            'question_id' => ['required', 'exists:quiz_questions,id'],
+            'answer'      => ['required'],
         ]);
 
+        $user     = Auth::user();
         $question = QuizQuestion::findOrFail($request->question_id);
-        $answerData = $request->input('answer');
-        
-        // --- Dynamic Answer Handling (Your previous logic is fine here) ---
-        if ($question->type === 'rating') {
-            $request->validate(['answer' => 'required|integer|between:1,5']);
-            $answerToStore = $answerData;
-        } elseif (is_array($answerData)) {
-            $answerToStore = implode(', ', $answerData);
-        } else {
-             $request->validate(['answer' => 'required|string']);
-            $answerToStore = $answerData;
+
+        $answer = $request->answer;
+        if (!is_array($answer)) {
+            $answer = [$answer];
         }
-        // ---------------------------------
 
         QuizAnswer::updateOrCreate(
-            ['user_id' => auth()->id(), 'question_id' => $request->question_id],
-            ['answer' => $answerToStore]
+            ['user_id' => $user->id, 'question_id' => $request->question_id],
+            ['answer' => $answer, 'score' => $this->calculateAnswerScore($question, $answer)]
         );
 
-        $current = $request->input('current');
-        $next = $current + 1;
-        $totalQuestions = QuizQuestion::count();
+        // Check if quiz is complete
+        $totalCount    = QuizQuestion::where('is_active', true)->count();
+        $answeredCount = QuizAnswer::where('user_id', $user->id)->count();
 
-        if ($next > $totalQuestions) {
-            session()->forget('quiz_current');
-            return redirect()->route('user.dashboard')->with('success', 'Quiz completed! Your compatibility profile is now active.');
+        if ($answeredCount >= $totalCount) {
+            // Determine personality type
+            $this->determinePersonalityType($user);
+            return response()->json(['redirect' => route('member.quiz.results')]);
         }
 
-        // Redirect to the NEXT sequential number
-        return redirect()->route('quiz.show', $next);
+        return response()->json(['success' => true, 'answered' => $answeredCount, 'total' => $totalCount]);
+    }
+
+    public function results()
+    {
+        $user    = Auth::user();
+        $answers = QuizAnswer::where('user_id', $user->id)
+            ->with('question')
+            ->get();
+
+        if ($answers->isEmpty()) {
+            return redirect()->route('member.quiz')->with('info', 'Please take the quiz first.');
+        }
+
+        $totalQuestions = QuizQuestion::where('is_active', true)->count();
+        $completionPct  = round(($answers->count() / $totalQuestions) * 100);
+
+        // Category scores
+        $categoryScores = $this->calculateCategoryScores($answers);
+
+        // Personality type
+        $personalityType = $user->profile?->personality_type ?? $this->determinePersonalityType($user);
+
+        // Top traits
+        $topTraits = $this->getTopTraits($categoryScores);
+
+        return view('user.quiz-results', compact(
+            'user', 'answers', 'categoryScores',
+            'personalityType', 'topTraits', 'completionPct'
+        ));
+    }
+
+    // ─── Private Helpers ─────────────────────────────────────
+
+    private function calculateAnswerScore(QuizQuestion $question, array $answer): int
+    {
+        if ($question->type === 'rating_scale') {
+            return (int)($answer[0] ?? 3) * 20; // 1-5 → 20-100
+        }
+        return 50; // default
+    }
+
+    private function calculateCategoryScores($answers): array
+    {
+        $categories = [];
+        foreach ($answers as $answer) {
+            $cat = $answer->question?->category ?? 'other';
+            if (!isset($categories[$cat])) {
+                $categories[$cat] = ['total' => 0, 'count' => 0];
+            }
+            $categories[$cat]['total'] += $answer->score;
+            $categories[$cat]['count']++;
+        }
+
+        $scores = [];
+        foreach ($categories as $cat => $data) {
+            $scores[$cat] = $data['count'] > 0
+                ? min(100, round($data['total'] / $data['count']))
+                : 50;
+        }
+        return $scores;
+    }
+
+    private function determinePersonalityType(object $user): string
+    {
+        $answers = QuizAnswer::where('user_id', $user->id)->with('question')->get();
+
+        $scores = $this->calculateCategoryScores($answers);
+
+        $maxCategory = collect($scores)->sortDesc()->keys()->first() ?? 'personality';
+
+        $types = [
+            'personality'        => 'The Heartfelt Romantic',
+            'values'             => 'The Principled Partner',
+            'lifestyle'          => 'The Free Spirit',
+            'relationship_goals' => 'The Intentional Lover',
+            'communication'      => 'The Deep Connector',
+            'interests'          => 'The Curious Soul',
+        ];
+
+        $type = $types[$maxCategory] ?? 'The Authentic Heart';
+
+        Profile::updateOrCreate(
+            ['user_id' => $user->id],
+            ['personality_type' => $type, 'quiz_score' => (int) round(collect($scores)->avg())]
+        );
+
+        return $type;
+    }
+
+    private function getTopTraits(array $scores): array
+    {
+        $traits = [
+            'personality'        => ['label' => 'Emotional Depth',    'icon' => 'fa-heart'],
+            'values'             => ['label' => 'Core Values',         'icon' => 'fa-star'],
+            'lifestyle'          => ['label' => 'Life Balance',        'icon' => 'fa-leaf'],
+            'relationship_goals' => ['label' => 'Relationship Vision', 'icon' => 'fa-compass'],
+            'communication'      => ['label' => 'Communication',       'icon' => 'fa-comments'],
+            'interests'          => ['label' => 'Shared Interests',    'icon' => 'fa-puzzle-piece'],
+        ];
+
+        $result = [];
+        foreach ($scores as $cat => $score) {
+            if (isset($traits[$cat])) {
+                $result[] = array_merge($traits[$cat], ['score' => $score, 'category' => $cat]);
+            }
+        }
+
+        usort($result, fn($a, $b) => $b['score'] - $a['score']);
+        return array_slice($result, 0, 4);
     }
 }

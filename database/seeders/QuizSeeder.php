@@ -4,133 +4,89 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\QuizQuestion;
-use Illuminate\Support\Facades\DB;
 
 class QuizSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        // Purane questions delete kar dein, taaki naye categories ke saath load ho
-        DB::table('quiz_questions')->delete(); 
-        echo "Seeding 23 Dynamic Quiz Questions with Categories...\n";
+        $questions = [
+            // Category: Lifestyle & Preferences
+            [
+                'category' => 'Lifestyle & Preferences',
+                'question' => 'How do you prefer to spend your ideal weekend?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Relaxing at home', 'Out with friends', 'Outdoor adventures', 'Trying new restaurants', 'Working on hobbies']),
+            ],
+            [
+                'category' => 'Lifestyle & Preferences',
+                'question' => 'How important is physical fitness and health in your life?',
+                'type' => 'rating',
+                'options' => null,
+            ],
+            [
+                'category' => 'Lifestyle & Preferences',
+                'question' => 'What is your stance on pets?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Love them, have/want pets', 'Like them, but dont want any', 'Not a fan', 'Allergic']),
+            ],
 
-        // --- QUESTIONNAIRE 1: Relationship Personality Assessment (Q1) ---
-        
-        $cat1 = 'QUESTIONNAIRE 1: Relationship Personality Assessment';
+            // Category: Values & Future
+            [
+                'category' => 'Values & Future',
+                'question' => 'What are you primarily looking for on this platform?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Long-term relationship', 'Marriage', 'Deep friendship', 'Casual dating']),
+            ],
+            [
+                'category' => 'Values & Future',
+                'question' => 'How important is career ambition to you in a partner?',
+                'type' => 'rating',
+                'options' => null,
+            ],
+            [
+                'category' => 'Values & Future',
+                'question' => 'Do you see yourself having children in the future?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Yes, definitely', 'Maybe', 'No', 'Already have children']),
+            ],
 
-        // 1. Reason for joining (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat1,
-            'question' => 'What is your primary reason for joining the 52 Week Love project?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Long-term relationship', 'Meaningful dating', 'Companionship with potential', 'Exploring options']),
-        ]);
+            // Category: Emotional Intelligence
+            [
+                'category' => 'Emotional Intelligence',
+                'question' => 'How do you typically handle conflict in a relationship?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Talk it out immediately', 'Take time to cool off first', 'Avoid it if possible', 'Express through actions']),
+            ],
+            [
+                'category' => 'Emotional Intelligence',
+                'question' => 'How important is open communication and vulnerability to you?',
+                'type' => 'rating',
+                'options' => null,
+            ],
+            [
+                'category' => 'Emotional Intelligence',
+                'question' => 'Which of these "Love Languages" resonates most with you?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Words of Affirmation', 'Acts of Service', 'Receiving Gifts', 'Quality Time', 'Physical Touch']),
+            ],
 
-        // 2. Communication style (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat1,
-            'question' => 'Which best describes your communication style?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Direct and honest', 'Soft and thoughtful', 'Balanced', 'Reserved']),
-        ]);
-
-        // 3. Preferred connection (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat1,
-            'question' => 'Which connection type do you prefer to develop first?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Emotional first', 'Physical first', 'Balanced', 'Intellectual']),
-        ]);
-
-        // 4. Conflict handling (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat1,
-            'question' => 'How do you prefer to handle conflict in a relationship?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Immediate discussion', 'Delayed communication', 'Avoidance', 'Structured approach']),
-        ]);
-
-        // 5. Top non-negotiables (Multiselect - Select up to 3)
-        QuizQuestion::create([
-            'category' => $cat1,
-            'question' => 'Select your top 3 non-negotiables in a partner:',
-            'type' => 'multiselect',
-            'options' => json_encode(['Hygiene', 'Emotional maturity', 'Financial stability', 'Communication consistency', 'Respect and loyalty', 'Ambition']),
-        ]);
-
-        // --- QUESTIONNAIRE 2: Emotional Compatibility Assessment (Q2) ---
-        
-        $cat2 = 'QUESTIONNAIRE 2: Emotional Compatibility Assessment';
-
-        // 1. How do you express affection? (Multiselect)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'How do you primarily express affection?',
-            'type' => 'multiselect',
-            'options' => json_encode(['Verbal', 'Physical touch', 'Quality time', 'Acts of service', 'Experiences']),
-        ]);
-
-        // 2. What affection do you expect? (Multiselect)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'What type of affection do you most expect from a partner?',
-            'type' => 'multiselect',
-            'options' => json_encode(['Verbal reassurance', 'Consistent presence', 'Physical intimacy', 'Practical support', 'Emotional depth']),
-        ]);
-
-        // 3. Dating expectations (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'What are your dating expectations regarding pace?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Slow and steady', 'Fast connection', 'Balanced progress', 'Chemistry first']),
-        ]);
-
-        // 4. Important values (Multiselect - Choose up to 4)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'Select up to 4 values that are most important to you:',
-            'type' => 'multiselect',
-            'options' => json_encode(['Honesty', 'Emotional availability', 'Independence', 'Ambition', 'Family orientation', 'Stability', 'Kindness']),
-        ]);
-
-        // 5. Preferred lifestyle (Multiple Choice)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'Which preferred lifestyle best matches yours?',
-            'type' => 'multiple_choice',
-            'options' => json_encode(['Calm, home-focused', 'Adventurous', 'Balanced', 'Social']),
-        ]);
-
-        // 6. Deal-breakers (Multiselect)
-        QuizQuestion::create([
-            'category' => $cat2,
-            'question' => 'What are your absolute deal-breakers?',
-            'type' => 'multiselect',
-            'options' => json_encode(['Dishonesty', 'Poor communication', 'Lack of ambition', 'Emotional baggage', 'Hygiene issues', 'Financial irresponsibility']),
-        ]);
-
-
-        // --- QUESTIONNAIRE 3: The 12C Compatibility Filter (Q3 - Rating Scale 1-5) ---
-        
-        $cat3 = 'QUESTIONNAIRE 3: The 12C Compatibility Filter';
-        
-        $c_questions = [
-            'Cute (Physical Attraction)', 'Cash (Financial Comfort)', 'Car (Mobility/Status)',
-            'Condo (Living Situation)', 'Cook (Culinary Skills)', 'Clean (Tidiness)',
-            'Connection (Emotional Bond)', 'Communication (Openness)', 'Credit Score (Financial Responsibility)',
-            'Commitment (Desire for Future)', 'Creativity (Hobbies/Expression)', 'Chemistry (Spark/Intimacy)'
+            // Category: Personality
+            [
+                'category' => 'Personality',
+                'question' => 'How would you describe your social energy?',
+                'type' => 'multiple_choice',
+                'options' => json_encode(['Extroverted', 'Introverted', 'Ambiverted']),
+            ],
+            [
+                'category' => 'Personality',
+                'question' => 'Are you more of a spontaneous person or a planner?',
+                'type' => 'rating',
+                'options' => null, // 1: Pure Planner, 5: Pure Spontaneous
+            ],
         ];
 
-        foreach ($c_questions as $c_q) {
-            QuizQuestion::create([
-                'category' => $cat3,
-                'question' => "Rate the importance of '{$c_q}' in a potential partner (1-5):",
-                'type' => 'rating',
-                'options' => null, 
-            ]);
+        foreach ($questions as $q) {
+            QuizQuestion::create($q);
         }
-
-        echo "Seeding Complete. Total questions: " . QuizQuestion::count() . "\n";
     }
 }

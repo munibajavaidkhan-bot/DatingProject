@@ -18,23 +18,19 @@
                 @auth
                     <!-- Role-based Navigation -->
                     <div class="flex items-center gap-3 text-white">
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-white/30' : '' }}">
-                                {{ __('Admin Panel') }}
-                            </a>
-                        @elseif(auth()->user()->isAuthor())
-                            <a href="{{ route('author.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('author.dashboard') ? 'bg-white/30' : '' }}">
-                                {{ __('Author Panel') }}
-                            </a>
-                        @else
-                            <a href="{{ route('user.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('user.dashboard') ? 'bg-white/30' : '' }}">
-                                {{ __('User Panel') }}
-                            </a>
-                        @endif
-                        
-                        <a href="{{ route('dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('dashboard') ? 'bg-white/30' : '' }}">
-                            Home
-                        </a>
+@if(auth()->user()->isAdmin())
+    <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-white/30' : '' }}">
+        {{ __('Admin Panel') }}
+    </a>
+@elseif(auth()->user()->isAuthor())
+    <a href="{{ route('author.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('author.dashboard') ? 'bg-white/30' : '' }}">
+        {{ __('Author Panel') }}
+    </a>
+@else
+    <a href="{{ route('member.dashboard') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('member.dashboard') ? 'bg-white/30' : '' }}">
+        {{ __('Dashboard') }}
+    </a>
+@endif
                         <a href="{{ route('profile.edit') }}" class="px-4 py-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors {{ request()->routeIs('profile.edit') ? 'bg-white/30' : '' }}">
                             Profile
                         </a>
@@ -70,6 +66,14 @@
                     </div>
                 @else
                     <!-- Guest Navigation -->
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('terms') }}" class="text-white text-sm hover:text-pink-100 transition-colors">
+                            Terms
+                        </a>
+                        <a href="{{ route('privacy') }}" class="text-white text-sm hover:text-pink-100 transition-colors">
+                            Privacy
+                        </a>
+                    </div>
                     <a href="{{ route('login') }}" class="px-4 py-2 rounded-full bg-white text-pink-600 font-semibold hover:bg-gray-100 transition-colors">
                         Login
                     </a>
@@ -94,23 +98,19 @@
         <div :class="{'block': open, 'hidden': ! open}" class="hidden md:hidden mt-4">
             <div class="pt-2 pb-3 space-y-1">
                 @auth
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('admin.dashboard') ? 'bg-white/20' : '' }}">
-                            {{ __('Admin Panel') }}
-                        </a>
-                    @elseif(auth()->user()->isAuthor())
-                        <a href="{{ route('author.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('author.dashboard') ? 'bg-white/20' : '' }}">
-                            {{ __('Author Panel') }}
-                        </a>
-                    @else
-                        <a href="{{ route('user.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('user.dashboard') ? 'bg-white/20' : '' }}">
-                            {{ __('User Panel') }}
-                        </a>
-                    @endif
-                    
-                    <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('dashboard') ? 'bg-white/20' : '' }}">
-                        Home
-                    </a>
+@if(auth()->user()->isAdmin())
+    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('admin.dashboard') ? 'bg-white/20' : '' }}">
+        {{ __('Admin Panel') }}
+    </a>
+@elseif(auth()->user()->isAuthor())
+    <a href="{{ route('author.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('author.dashboard') ? 'bg-white/20' : '' }}">
+        {{ __('Author Panel') }}
+    </a>
+@else
+    <a href="{{ route('member.dashboard') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('member.dashboard') ? 'bg-white/20' : '' }}">
+        {{ __('Dashboard') }}
+    </a>
+@endif
                     <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md {{ request()->routeIs('profile.edit') ? 'bg-white/20' : '' }}">
                         Profile
                     </a>
@@ -142,6 +142,12 @@
             @else
                 <div class="pt-4 pb-1 border-t border-pink-400">
                     <div class="mt-3 space-y-1">
+                        <a href="{{ route('terms') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md">
+                            Terms & Conditions
+                        </a>
+                        <a href="{{ route('privacy') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md">
+                            Privacy Policy
+                        </a>
                         <a href="{{ route('login') }}" class="block px-4 py-2 text-white hover:bg-white/20 rounded-md">
                             Login
                         </a>

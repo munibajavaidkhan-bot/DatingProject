@@ -1,190 +1,295 @@
-{{-- resources/views/dashboard.blade.php --}}
-
+{{-- resources/views/user/dashboard.blade.php --}}
 @extends('layouts.user-layout')
-@section('title', 'Your Love Dashboard')
+
+@section('title', 'Dashboard')
+@section('page-title', 'My Dashboard')
 
 @section('content')
-<div class="w-screen h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-rose-100 fixed top-0 left-0 -z-10"></div>
-<div class="relative z-0">
-    <div class="p-4 lg:p-8">
-        <div class="max-w-7xl mx-auto">
 
-            <!-- Main Grid -->
-        <div class="grid lg:grid-cols-3 gap-6">
+{{-- Hero Welcome Card --}}
+<div style="background:linear-gradient(135deg,#ec4899,#a855f7,#6366f1);border-radius:24px;padding:32px;color:white;margin-bottom:24px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,0.08);border-radius:50%;"></div>
+    <div style="position:absolute;bottom:-60px;right:60px;width:120px;height:120px;background:rgba(255,255,255,0.05);border-radius:50%;"></div>
 
-            <!-- LEFT: Main Content -->
-            <div class="lg:col-span-2 space-y-6">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:8px;">
+                Welcome back, {{ explode(' ', $user->name)[0] }}! 💕
+            </h2>
+            <p style="opacity:0.9;font-size:15px;margin-bottom:20px;">
+                You're on Week <strong>{{ $currentWeekNum }}</strong> of your 52-week journey to meaningful love.
+            </p>
 
-                <!-- Welcome + Progress Card -->
-                <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                        <div>
-                            <h2 class="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                                Hey, {{ auth()->user()->name }}
-                                <span class="text-2xl animate-wave">👋</span>
-                            </h2>
-                            <p class="mt-2 text-gray-600">Welcome back — here’s your progress for <strong>Week #3</strong>.</p>
-                        </div>
-                        <div class="text-right">
-                            <span class="inline-block px-5 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold shadow-lg transform hover:scale-105 transition">
-                                Premium
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Progress Bar -->
-                    <div class="mt-6">
-                        <div class="flex justify-between text-sm text-gray-600 mb-2">
-                            <span>Progress</span>
-                            <span class="font-semibold">45% complete</span>
-                        </div>
-                        <div class="w-full bg-white/50 rounded-full h-4 shadow-inner overflow-hidden">
-                            <div class="h-full rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-rose-500 shadow-md transition-all duration-1000 ease-out" style="width: 45%"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Weekly Lesson -->
-                <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20">
-                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800 mb-3">This Week’s Lesson</h3>
-                    <p class="text-gray-600 mb-5 leading-relaxed">
-                        <em>“How to open up again”</em> — A gentle guide to vulnerability. Includes a 5-min video + printable workbook.
-                    </p>
-                    <div class="flex flex-wrap gap-3">
-                        <a href="#" class="neumorphic-btn bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition">
-                            Open Lesson
-                        </a>
-                        <a href="#" class="neumorphic-btn bg-white/80 text-gray-700 px-6 py-3 rounded-full font-semibold shadow-inner hover:shadow-md transition">
-                            Mark Complete
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Personality Quiz -->
-                <div class="glass-card p-6 lg:p-8 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20">
-                    <h3 class="text-xl lg:text-2xl font-bold text-gray-800 mb-3">Personality Quiz</h3>
-                    <p class="text-gray-600 mb-5">Unlock better matches with our 2-minute personality assessment.</p>
-                        <a href="{{ route('quiz.index') }}" 
-                        class="neumorphic-btn bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-800 px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-xl transform hover:scale-105 transition inline-flex items-center gap-2">
-                            </a>                        Start Quiz
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </a>
-                </div>
-
+            {{-- Progress Bar --}}
+            <div style="background:rgba(255,255,255,0.2);border-radius:20px;height:10px;margin-bottom:8px;">
+                <div style="background:rgba(255,255,255,0.9);border-radius:20px;height:10px;width:{{ $progressPercent }}%;transition:width 1s ease;"></div>
             </div>
-
-            <!-- RIGHT: Sidebar -->
-            <aside class="space-y-6">
-
-                <!-- Profile Card -->
-                <div class="glass-card p-6 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20 text-center">
-                    <div class="relative mx-auto w-32 h-32 mb-4">
-                        <div class="absolute inset-0 bg-gradient-to-br from-pink-400 to-purple-600 rounded-full blur-xl opacity-50"></div>
-                        <img
-    src="{{ auth()->user()->profile_picture ? route('profile.photo', ['filename' => basename(auth()->user()->profile_picture)]) : asset('images/default-avatar.jpg') }}"
-    alt="Profile"
-    class="relative w-full h-full rounded-full object-cover border-4 border-white shadow-lg"
->
-                    </div>
-                    
-                    <h4 class="text-xl font-bold text-gray-800">{{ auth()->user()->name }}</h4>
-                    <p class="text-sm text-gray-600 mt-1">
-                        Age: {{ auth()->user()->dob ?? '—' }} • 
-                        {{ auth()->user()->location ?? 'City not set' }}
-                    </p>
-                    <a href="{{ route('profile.editById', auth()->id()) }}" 
-                       class="mt-5 inline-block neumorphic-btn bg-white text-pink-600 px-6 py-3 rounded-full font-bold shadow-inner hover:shadow-md transition">
-                        Edit Profile
-                    </a>
-                </div>
-
-                <!-- Suggested Matches -->
-                <div class="glass-card p-6 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20">
-                    <h4 class="text-lg font-bold text-gray-800 mb-4">Suggested Matches</h4>
-                    <div class="space-y-4">
-                        <!-- Match 1 -->
-                        <div class="flex items-center gap-4 p-3 bg-white/50 rounded-2xl shadow-sm hover:shadow-md transition">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                                JM
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-800">Jerry M.</p>
-                                <p class="text-xs text-gray-600">28 • Houston</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold text-lg">82%</p>
-                                <a href="#" class="text-xs text-purple-600 hover:underline">View</a>
-                            </div>
-                        </div>
-
-                        <!-- Match 2 -->
-                        <div class="flex items-center gap-4 p-3 bg-white/50 rounded-2xl shadow-sm hover:shadow-md transition">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                                AK
-                            </div>
-                            <div class="flex-1">
-                                <p class="font-semibold text-gray-800">Alex K.</p>
-                                <p class="text-xs text-gray-600">30 • Toronto</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-green-600 font-bold text-lg">78%</p>
-                                <a href="#" class="text-xs text-purple-600 hover:underline">View</a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="{{ route('user.matches') }}" class="block mt-5 text-sm text-purple-600 font-semibold hover:underline text-center">
-                        See all matches
-                    </a>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="glass-card p-6 rounded-3xl shadow-xl backdrop-blur-xl border border-white/20">
-                    <h4 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h4>
-                    <div class="grid gap-3">
-                        <a href="{{ route('quiz.index') }}" class="neumorphic-btn bg-white text-pink-600 px-5 py-3 rounded-full font-bold text-center shadow-inner hover:shadow-md transition">
-                            Take Quiz
-                        </a>
-                        <a href="{{ route('user.matches') }}" class="neumorphic-btn bg-white text-pink-600 px-5 py-3 rounded-full font-bold text-center shadow-inner hover:shadow-md transition">
-                            View Matches
-                        </a>
-                        <a href="{{ route('user.forum') }}" class="neumorphic-btn bg-white text-pink-600 px-5 py-3 rounded-full font-bold text-center shadow-inner hover:shadow-md transition">
-                            Community
-                        </a>
-                    </div>
-                </div>
-
-            </aside>
+            <div style="font-size:13px;opacity:0.85;">
+                {{ $completedCount }} of 52 weeks completed — {{ $progressPercent }}% of your journey
+            </div>
         </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div style="background:rgba(255,255,255,0.15);border-radius:16px;padding:16px;display:inline-block;">
+                <div style="font-size:36px;font-weight:800;line-height:1;">{{ $totalMatches }}</div>
+                <div style="font-size:13px;opacity:0.85;">Total Matches</div>
+                <div style="font-size:11px;opacity:0.7;margin-top:4px;">{{ $acceptedMatches }} accepted</div>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    .glass-card {
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-    }
-    .neumorphic-btn {
-        transition: all 0.3s ease;
-        box-shadow: 6px 6px 12px rgba(0,0,0,0.05), -6px -6px 12px rgba(255,255,255,0.8);
-    }
-    .neumorphic-btn:hover {
-        box-shadow: 3px 3px 8px rgba(0,0,0,0.08), -3px -3px 8px rgba(255,255,255,0.9);
-        transform: translateY(-2px);
-    }
-    @keyframes wave {
-        0%, 100% { transform: rotate(0deg); }
-        25% { transform: rotate(20deg); }
-        50% { transform: rotate(-10deg); }
-        75% { transform: rotate(15deg); }
-    }
-    .animate-wave {
-        display: inline-block;
-        animation: wave 2s infinite;
-        transform-origin: 70% 70%;
-    }
-</style>
+{{-- Stats Row --}}
+<div class="row g-3 mb-4">
+    @php
+    $statCards = [
+        ['label' => 'Matches', 'value' => $totalMatches, 'icon' => 'fa-heart', 'color' => '#ec4899', 'bg' => '#fce7f3', 'route' => 'member.matches'],
+        ['label' => 'Messages', 'value' => $unreadMessages, 'icon' => 'fa-comment-dots', 'color' => '#a855f7', 'bg' => '#f3e8ff', 'route' => 'member.chat'],
+        ['label' => 'Current Week', 'value' => $currentWeekNum, 'icon' => 'fa-calendar-week', 'color' => '#6366f1', 'bg' => '#eef2ff', 'route' => 'member.content'],
+        ['label' => 'Quiz Status', 'value' => $quizCompleted ? '✓ Done' : $quizAnswerCount.'/29', 'icon' => 'fa-brain', 'color' => '#f59e0b', 'bg' => '#fef3c7', 'route' => 'member.quiz'],
+    ];
+    @endphp
+
+    @foreach($statCards as $card)
+    <div class="col-6 col-md-3">
+        <a href="{{ route($card['route']) }}" style="text-decoration:none;">
+            <div class="glass-card text-center" style="padding:20px;transition:transform .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div style="width:48px;height:48px;background:{{ $card['bg'] }};border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                    <i class="fas {{ $card['icon'] }}" style="color:{{ $card['color'] }};font-size:20px;"></i>
+                </div>
+                <div style="font-size:24px;font-weight:800;color:#1f2937;">{{ $card['value'] }}</div>
+                <div style="font-size:12px;color:#6b7280;font-weight:500;">{{ $card['label'] }}</div>
+            </div>
+        </a>
+    </div>
+    @endforeach
+</div>
+
+<div class="row g-4">
+    {{-- Left Column --}}
+    <div class="col-lg-8">
+
+        {{-- Current Week Lesson --}}
+        @if($currentWeek)
+        <div class="glass-card mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <span style="background:linear-gradient(135deg,#ec4899,#a855f7);color:white;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;">
+                        Week {{ $currentWeekNum }}
+                    </span>
+                </div>
+                @if($weekProgress?->is_completed)
+                <span style="color:#22c55e;font-size:13px;font-weight:600;">
+                    <i class="fas fa-check-circle me-1"></i> Completed
+                </span>
+                @endif
+            </div>
+
+            <h4 style="font-family:'Playfair Display',serif;font-weight:700;color:#1f2937;margin-bottom:6px;">
+                {{ $currentWeek->title }}
+            </h4>
+            <p style="color:#6b7280;font-size:13px;margin-bottom:16px;">{{ $currentWeek->subtitle }}</p>
+            <p style="color:#4b5563;font-size:14px;line-height:1.7;margin-bottom:20px;">
+                {{ \Str::limit($currentWeek->description, 200) }}
+            </p>
+
+            {{-- Exercises preview --}}
+            @if($currentWeek->exercises)
+            <div style="background:#fdf2f8;border-radius:12px;padding:16px;margin-bottom:20px;">
+                <div style="font-weight:700;font-size:13px;color:#ec4899;margin-bottom:10px;">
+                    <i class="fas fa-tasks me-2"></i>This Week's Exercises
+                </div>
+                @foreach(array_slice($currentWeek->exercises, 0, 3) as $exercise)
+                <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;">
+                    <i class="fas fa-circle-check" style="color:#ec4899;font-size:12px;margin-top:3px;flex-shrink:0;"></i>
+                    <span style="font-size:13px;color:#4b5563;">{{ $exercise }}</span>
+                </div>
+                @endforeach
+            </div>
+            @endif
+
+            <div class="d-flex gap-2">
+                @if($weekProgress?->is_unlocked || !$currentWeek->is_premium)
+                <a href="{{ route('member.content.show', $currentWeekNum) }}" class="btn-gradient" style="font-size:13px;padding:10px 20px;border-radius:10px;text-decoration:none;">
+                    <i class="fas fa-book-open me-2"></i>Read Lesson
+                </a>
+                @else
+                <a href="{{ route('member.plans') }}" class="btn-gradient" style="font-size:13px;padding:10px 20px;border-radius:10px;text-decoration:none;background:linear-gradient(135deg,#f59e0b,#ef4444);">
+                    <i class="fas fa-crown me-2"></i>Unlock Premium
+                </a>
+                @endif
+
+                <a href="{{ route('member.content') }}" style="font-size:13px;padding:10px 20px;border-radius:10px;color:#a855f7;border:1px solid #a855f7;text-decoration:none;font-weight:600;">
+                    All Weeks
+                </a>
+            </div>
+        </div>
+        @endif
+
+        {{-- Suggested Matches --}}
+        <div class="glass-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 style="font-weight:700;color:#1f2937;margin:0;">
+                    <i class="fas fa-heart me-2" style="color:#ec4899;"></i>
+                    Suggested Matches
+                </h5>
+                <a href="{{ route('member.matches') }}" style="color:#ec4899;font-size:13px;font-weight:600;text-decoration:none;">
+                    View All <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+
+            @forelse($suggestedMatches as $match)
+            @php $other = $match->getOtherUser($user->id); @endphp
+            <div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(236,72,153,0.08);" class="{{ !$loop->last ? '' : '' }}">
+                <div style="position:relative;flex-shrink:0;">
+                    <img src="{{ $other->getAvatarUrl() }}"
+                         style="width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid #ec4899;">
+                    @if($other->profile?->is_verified)
+                    <div style="position:absolute;bottom:-2px;right:-2px;width:18px;height:18px;background:#3b82f6;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-check" style="font-size:8px;color:white;"></i>
+                    </div>
+                    @endif
+                </div>
+
+                <div style="flex:1;min-width:0;">
+                    <div style="font-weight:700;font-size:14px;color:#1f2937;">{{ $other->name }}</div>
+                    <div style="font-size:12px;color:#6b7280;margin-top:2px;">
+                        {{ $other->getAge() ? $other->getAge().' years' : '' }}
+                        {{ $other->profile?->city ? '· '.$other->profile->city : '' }}
+                    </div>
+                    @if($other->profile?->personality_type)
+                    <div style="font-size:11px;color:#a855f7;font-weight:600;margin-top:3px;">
+                        {{ $other->profile->personality_type }}
+                    </div>
+                    @endif
+                </div>
+
+                <div style="text-align:right;flex-shrink:0;">
+                    <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg,#ec4899,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">
+                        {{ $match->compatibility_score }}%
+                    </div>
+                    <div style="font-size:10px;color:#9ca3af;">match</div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                    <form action="{{ route('member.matches.accept', $match->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" style="width:32px;height:32px;border-radius:50%;background:#fce7f3;border:none;color:#ec4899;cursor:pointer;transition:all .2s;" title="Accept">
+                            <i class="fas fa-heart fa-xs"></i>
+                        </button>
+                    </form>
+                    <form action="{{ route('member.matches.reject', $match->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" style="width:32px;height:32px;border-radius:50%;background:#f3f4f6;border:none;color:#9ca3af;cursor:pointer;transition:all .2s;" title="Pass">
+                            <i class="fas fa-times fa-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @empty
+            <div style="text-align:center;padding:30px;color:#9ca3af;">
+                <i class="fas fa-heart-crack fa-2x mb-3"></i>
+                <p style="font-size:14px;">No suggestions yet. Complete your quiz to get matched!</p>
+                <a href="{{ route('member.quiz') }}" class="btn-gradient" style="font-size:13px;padding:10px 20px;border-radius:10px;text-decoration:none;display:inline-block;">
+                    Take Quiz
+                </a>
+            </div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Right Column --}}
+    <div class="col-lg-4">
+
+        {{-- Profile Card --}}
+        <div class="glass-card mb-4 text-center">
+            <div style="position:relative;display:inline-block;margin-bottom:16px;">
+                <img src="{{ $user->getAvatarUrl() }}"
+                     style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #ec4899;">
+                @if($user->profile?->is_verified)
+                <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:#3b82f6;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-check" style="font-size:9px;color:white;"></i>
+                </div>
+                @endif
+            </div>
+            <h6 style="font-weight:700;color:#1f2937;margin-bottom:2px;">{{ $user->name }}</h6>
+            <div style="font-size:12px;color:#a855f7;font-weight:600;margin-bottom:4px;">
+                {{ $user->profile?->personality_type ?? 'Love Seeker' }}
+            </div>
+            <div style="font-size:12px;color:#6b7280;margin-bottom:16px;">
+                {{ $user->profile?->city ?? '' }}
+                {{ $user->getAge() ? '· ' . $user->getAge() . ' yrs' : '' }}
+            </div>
+
+            {{-- Profile completeness --}}
+            @php
+                $completeness = 0;
+                $checks = ['first_name','gender','date_of_birth','city','bio','profile_picture','occupation','interests','relationship_goal'];
+                foreach($checks as $c) { if($user->profile?->$c) $completeness++; }
+                $pct = round(($completeness / count($checks)) * 100);
+            @endphp
+            <div style="text-align:left;margin-bottom:12px;">
+                <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">
+                    Profile Completeness — <strong style="color:#ec4899;">{{ $pct }}%</strong>
+                </div>
+                <div style="background:#fce7f3;border-radius:20px;height:6px;">
+                    <div style="background:linear-gradient(90deg,#ec4899,#a855f7);border-radius:20px;height:6px;width:{{ $pct }}%;"></div>
+                </div>
+            </div>
+
+            <a href="{{ route('profile.edit') }}" class="btn-gradient w-100" style="font-size:13px;padding:10px;border-radius:10px;text-decoration:none;display:block;text-align:center;">
+                <i class="fas fa-edit me-1"></i> Edit Profile
+            </a>
+        </div>
+
+        {{-- Quiz CTA --}}
+        @if(!$quizCompleted)
+        <div style="background:linear-gradient(135deg,#f59e0b,#ef4444);border-radius:20px;padding:20px;color:white;margin-bottom:16px;">
+            <i class="fas fa-brain fa-2x mb-2 d-block"></i>
+            <h6 style="font-weight:700;">Complete Your Quiz</h6>
+            <p style="font-size:12px;opacity:0.9;margin-bottom:12px;">
+                {{ $quizAnswerCount }} of 29 questions answered. Finish to get better matches!
+            </p>
+            <div style="background:rgba(255,255,255,0.2);border-radius:20px;height:6px;margin-bottom:12px;">
+                <div style="background:white;border-radius:20px;height:6px;width:{{ $quizAnswerCount > 0 ? round(($quizAnswerCount/29)*100) : 0 }}%;"></div>
+            </div>
+            <a href="{{ route('member.quiz.start') }}" style="background:white;color:#ef4444;font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;text-decoration:none;display:block;text-align:center;">
+                {{ $quizAnswerCount > 0 ? 'Continue Quiz' : 'Start Quiz' }}
+            </a>
+        </div>
+        @endif
+
+        {{-- Notifications --}}
+        <div class="glass-card">
+            <h6 style="font-weight:700;color:#1f2937;margin-bottom:16px;">
+                <i class="fas fa-bell me-2" style="color:#a855f7;"></i> Recent Activity
+            </h6>
+
+            @forelse($recentNotifications as $notif)
+            <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;{{ !$notif->is_read ? 'opacity:1' : 'opacity:0.7' }}">
+                <div style="width:32px;height:32px;border-radius:50%;background:{{ $notif->color }}22;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fas {{ $notif->icon }}" style="color:{{ $notif->color }};font-size:12px;"></i>
+                </div>
+                <div style="min-width:0;">
+                    <div style="font-size:12px;font-weight:600;color:#1f2937;">{{ $notif->title }}</div>
+                    <div style="font-size:11px;color:#6b7280;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $notif->message }}</div>
+                    <div style="font-size:10px;color:#9ca3af;margin-top:2px;">{{ $notif->created_at->diffForHumans() }}</div>
+                </div>
+            </div>
+            @empty
+            <div style="text-align:center;color:#9ca3af;padding:16px;">
+                <i class="fas fa-bell-slash mb-2 d-block"></i>
+                <span style="font-size:12px;">No recent activity</span>
+            </div>
+            @endforelse
+
+            @if($recentNotifications->count() > 0)
+            <a href="{{ route('member.notifications') }}" style="display:block;text-align:center;color:#ec4899;font-size:12px;font-weight:600;margin-top:8px;text-decoration:none;">
+                View all <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+            @endif
+        </div>
+
+    </div>
+</div>
+
 @endsection

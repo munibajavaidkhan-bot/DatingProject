@@ -2,137 +2,158 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-    /**
-     * -------------------------------
-     *  1. EDIT OWN PROFILE (BREEZE)
-     * -------------------------------
-     */
-    public function edit(Request $request): View
+    public function edit()
     {
-        return view('profile.edit', [
-            'user' => $request->user()
-        ]);
+        $user    = Auth::user()->load('profile');
+        $profile = $user->profile ?? new Profile(['user_id' => $user->id]);
+
+        return view('profile.edit', compact('user', 'profile'));
     }
 
-    /**
-     * -------------------------------
-     *  2. EDIT PROFILE BY USER ID
-     * -------------------------------
-     */
-    public function editById($id): View
+    public function update(Request $request)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
-        // Return the new update view
-        return view('profile.updateuserprofile', [
-            'user' => $user
+        $request->validate([
+            'name'          => ['required', 'string', 'max:255'],
+            'email'         => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'first_name'    => ['nullable', 'string', 'max:100'],
+            'last_name'     => ['nullable', 'string', 'max:100'],
+            'date_of_birth' => ['nullable', 'date', 'before:-18 years'],
+            'gender'        => ['nullable', 'in:male,female,other'],
+            'city'          => ['nullable', 'string', 'max:100'],
+            'country'       => ['nullable', 'string', 'max:100'],
+            'bio'           => ['nullable', 'string', 'max:1000'],
+            'occupation'    => ['nullable', 'string', 'max:100'],
+            'education'     => ['nullable', 'string', 'max:100'],
+            'relationship_goal' => ['nullable', 'in:marriage,long_term,casual,friendship,not_sure'],
+            'interests'     => ['nullable', 'array'],
+            'height'        => ['nullable', 'integer', 'min:100', 'max:250'],
+            'body_type'     => ['nullable', 'in:slim,athletic,average,curvy,heavy,prefer_not_to_say'],
+            'religion'      => ['nullable', 'string', 'max:50'],
+            'smoking'       => ['nullable', 'in:never,occasionally,regularly,prefer_not_to_say'],
+            'drinking'      => ['nullable', 'in:never,occasionally,socially,regularly,prefer_not_to_say'],
+            'has_children'  => ['nullable', 'in:yes,no,prefer_not_to_say'],
+            'wants_children'=> ['nullable', 'in:yes,no,maybe,prefer_not_to_say'],
+            'preferred_age_min'      => ['nullable', 'integer', 'min:18', 'max:99'],
+            'preferred_age_max'      => ['nullable', 'integer', 'min:18', 'max:99'],
+            'preferred_gender'       => ['nullable', 'in:male,female,other,any'],
+            'preferred_distance_km'  => ['nullable', 'integer', 'min:10', 'max:10000'],
         ]);
+
+        // Update user table
+        $user->update([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ]);
+
+        // Update or create profile
+        $profileData = $request->only([
+            'first_name', 'last_name', 'date_of_birth', 'gender',
+            'city', 'country', 'bio', 'occupation', 'education',
+            'relationship_goal', 'interests', 'height', 'body_type',
+            'religion', 'smoking', 'drinking', 'has_children', 'wants_children',
+            'preferred_age_min', 'preferred_age_max',
+            'preferred_gender', 'preferred_distance_km',
+        ]);
+
+        // Check if profile is complete
+        $requiredFields = ['first_name', 'date_of_birth', 'gender', 'city', 'bio'];
+        $isComplete = true;
+        foreach ($requiredFields as $field) {
+            if (empty($profileData[$field] ?? $user->profile?->$field)) {
+                $isComplete = false;
+                break;
+            }
+        }
+        $profileData['is_complete'] = $isComplete;
+
+        Profile::updateOrCreate(
+            ['user_id' => $user->id],
+            $profileData
+        );
+
+        return back()->with('success', 'Profile updated successfully!');
     }
 
-    /**
-     * -------------------------------
-     *  3. UPDATE OWN PROFILE (BREEZE)
-     * -------------------------------
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function updatePhoto(Request $request)
     {
-        $user = $request->user();
-        $user->fill($request->validated());
+        $request->validate([
+            'photo' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+        ]);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        $user = Auth::user();
+
+        // Delete old photo
+        if ($user->profile?->profile_picture) {
+            Storage::disk('public')->delete($user->profile->profile_picture);
         }
 
-        $user->save();
+        $path = $request->file('photo')->store('profile-photos', 'public');
 
-        return redirect()->route('user.dashboard')->with('status', 'profile-updated');
+        Profile::updateOrCreate(
+            ['user_id' => $user->id],
+            ['profile_picture' => $path]
+        );
+
+        return back()->with('success', 'Profile photo updated!');
     }
 
-    /**
-     * -------------------------------------
-     *  4. UPDATE PROFILE BY USER ID (ADMIN)
-     * -------------------------------------
-     */
-    public function updateById(Request $request, $id) // Changed to regular Request
+    public function updatePassword(Request $request)
     {
-        $user = User::findOrFail($id);
-
-        // Validate the request data
-        $validated = $request->validate([
-            'gender' => 'nullable|string|in:Male,Female,Other',
-            'dob' => 'nullable|date',
-            'location' => 'nullable|string|max:255',
-            'bio' => 'nullable|string|max:1000',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+        $request->validate([
+            'current_password' => ['required'],
+            'password'         => ['required', 'min:8', 'confirmed'],
         ]);
 
-        // Fill the validated fields
-        $user->fill($validated);
+        $user = Auth::user();
 
-        // Handle profile picture if uploaded
-        if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            $path = $file->store('profile_pictures', 'public');
-            $user->profile_picture = $path;
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
 
-        // Remove the duplicate fill() call and the dd() statement
-        // $user->fill($request->except('profile_picture')); // REMOVE THIS LINE
-        // dd($user->getAttributes()); // REMOVE THIS LINE
+        $user->update(['password' => Hash::make($request->password)]);
 
-        $user->save();
-
-        return redirect()->route('user.dashboard')->with('status', 'profile-updated');
+        return back()->with('success', 'Password changed successfully!');
     }
 
-    /**
-     * -------------------------------
-     *  5. DELETE ACCOUNT (BREEZE)
-     * -------------------------------
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        $request->validate(['password' => ['required']]);
 
-        $user = $request->user();
+        $user = Auth::user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Incorrect password.']);
+        }
 
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return redirect('/')->with('success', 'Account deleted successfully.');
     }
 
-    /**
-     * Serve a profile photo from the storage public disk.
-     */
-    public function photo($filename)
+    public function show(int $id)
     {
-        $path = 'profile_pictures/' . $filename;
+        $profileUser = User::with('profile')->findOrFail($id);
 
-        if (!Storage::disk('public')->exists($path)) {
-            abort(404);
+        // Increment profile views
+        if ($profileUser->id !== Auth::id()) {
+            $profileUser->profile?->increment('profile_views');
         }
 
-        $contents = Storage::disk('public')->get($path);
-        $mime = Storage::disk('public')->mimeType($path) ?? 'image/jpeg';
-
-        return response($contents, 200)->header('Content-Type', $mime);
+        return view('profile.updateuserprofile', compact('profileUser'));
     }
 }
