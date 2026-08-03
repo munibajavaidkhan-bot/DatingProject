@@ -5,9 +5,17 @@
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#ec4899,#a855f7);border-radius:24px;padding:28px 32px;color:white;margin-bottom:28px;">
-    <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:4px;">Notifications</h2>
-    <p style="opacity:0.9;font-size:14px;margin:0;">Stay updated on matches, messages, and community activity</p>
+<div style="background:linear-gradient(135deg,#ec4899,#a855f7);border-radius:24px;padding:28px 32px;color:white;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+    <div>
+        <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:4px;">Notifications</h2>
+        <p style="opacity:0.9;font-size:14px;margin:0;">Stay updated on matches, messages, and community activity</p>
+    </div>
+    <form action="{{ route('member.notifications.readAll') }}" method="POST">
+        @csrf
+        <button type="submit" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);border-radius:12px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;">
+            Mark all read
+        </button>
+    </form>
 </div>
 
 <div class="glass-card" style="padding:0;overflow:hidden;">

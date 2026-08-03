@@ -130,8 +130,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/#how-it-works">How It Works</a></li>
                     <li class="nav-item"><a class="nav-link" href="/#features">Features</a></li>
                     <li class="nav-item"><a class="nav-link" href="/#testimonials">Success Stories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('pricing') }}">Pricing</a></li>
                     <li class="nav-item"><a class="nav-link active" href="{{ route('terms') }}">Terms</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('privacy') }}">Privacy</a></li>
                     <li class="nav-item"><a class="nav-link btn-primary ms-3" href="{{ url('/login') }}" style="color:white !important; padding:10px 25px; border-radius:30px;">My Account</a></li>
@@ -330,9 +332,10 @@
                     <div class="footer-widget">
                         <h4>Quick Links</h4>
                         <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">How It Works</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="/">About Us</a></li>
+                            <li><a href="/#how-it-works">How It Works</a></li>
+                            <li><a href="{{ route('pricing') }}">Pricing</a></li>
+                            <li><a href="/">Contact</a></li>
                         </ul>
                     </div>
                 </div>
@@ -341,10 +344,10 @@
                     <div class="footer-widget">
                         <h4>Features</h4>
                         <ul>
-                            <li><a href="#">52 Lessons</a></li>
-                            <li><a href="#">Love Quiz</a></li>
-                            <li><a href="#">Matches</a></li>
-                            <li><a href="#">Community</a></li>
+                            <li><a href="{{ route('member.content') }}">52 Lessons</a></li>
+                            <li><a href="{{ route('member.quiz') }}">Love Quiz</a></li>
+                            <li><a href="{{ route('member.matches') }}">Matches</a></li>
+                            <li><a href="{{ route('member.forum') }}">Community</a></li>
                         </ul>
                     </div>
                 </div>

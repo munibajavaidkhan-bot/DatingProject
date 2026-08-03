@@ -56,22 +56,26 @@ $categories = [
 <div class="row g-3" id="weeksGrid">
     @foreach($weeks as $week)
     @php
-    $isCompleted = $progress[$week->id] ?? false;
-    $isUnlocked  = $unlocked[$week->id] ?? false;
+    $isCompleted = (bool) ($progress[$week->id] ?? false);
+    $isUnlocked  = (bool) ($unlocked[$week->id] ?? false);
     $isCurrent   = $week->week_number === $currentWeek;
-    $isLocked    = !$isUnlocked && !$isCompleted && $week->week_number > $currentWeek;
+    $isFreeWeek  = $week->week_number <= 4;
+    $isLocked    = !$isFreeWeek
+        && !$isUnlocked
+        && !$isCompleted
+        && $week->week_number > $currentWeek
+        && !auth()->user()->isPremium();
     @endphp
 
     <div class="col-md-6 col-xl-4 week-card" data-category="{{ $week->category }}">
-        <div style="background:{{ $isCompleted ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : ($isCurrent ? 'linear-gradient(135deg,#fce7f3,#f3e8ff)' : 'rgba(255,255,255,0.85)') }};
+        <div class="week-card-inner {{ $isLocked ? 'is-locked' : '' }}"
+             style="background:{{ $isCompleted ? 'linear-gradient(135deg,#d1fae5,#a7f3d0)' : ($isCurrent ? 'linear-gradient(135deg,#fce7f3,#f3e8ff)' : 'rgba(255,255,255,0.85)') }};
                     backdrop-filter:blur(16px);
                     border-radius:18px;
                     border:1.5px solid {{ $isCompleted ? '#6ee7b7' : ($isCurrent ? '#ec4899' : 'rgba(255,255,255,0.5)') }};
                     padding:20px;
                     transition:transform .2s,box-shadow .2s;
-                    {{ $isLocked ? 'opacity:0.6;' : '' }}"
-             onmouseover="{{ !$isLocked ? \"this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(236,72,153,0.12)'\" : '' }}"
-             onmouseout="this.style.transform='translateY(0)';this.style.boxShadow=''">
+                    {{ $isLocked ? 'opacity:0.6;' : '' }}">
 
             <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
                 <div style="background:{{ $isCompleted ? '#22c55e' : ($isCurrent ? 'linear-gradient(135deg,#ec4899,#a855f7)' : '#f3f4f6') }};
@@ -127,6 +131,15 @@ $categories = [
 </div>
 
 @endsection
+
+@push('styles')
+<style>
+.week-card-inner:not(.is-locked):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(236,72,153,0.12);
+}
+</style>
+@endpush
 
 @push('scripts')
 <script>

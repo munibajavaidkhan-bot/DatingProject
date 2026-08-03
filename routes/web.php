@@ -20,9 +20,11 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\ForumController as AdminForumController;
 use App\Http\Controllers\Author\DashboardController as AuthorDashboardController;
+use App\Http\Controllers\Author\BlogController as AuthorBlogController;
 
 // ── Public Routes ─────────────────────────────────────────────
 Route::get('/', fn() => view('welcome'))->name('welcome');
+Route::get('/pricing', [PlanController::class, 'publicIndex'])->name('pricing');
 Route::get('/terms', fn() => view('terms'))->name('terms');
 Route::get('/privacy', fn() => view('privacy'))->name('privacy');
 
@@ -47,7 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
          ->name('profile.show');
 
     // ── Member Routes ─────────────────────────────────────────
-    Route::prefix('member')->name('member.')->group(function () {
+    Route::prefix('member')->name('member.')->middleware('profile.complete')->group(function () {
 
         // Dashboard
         Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -165,6 +167,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Admin Content
         Route::get('/content', [AdminContentController::class, 'index'])->name('content.index');
         Route::get('/content/{id}/edit', [AdminContentController::class, 'edit'])->name('content.edit');
+        Route::put('/content/{id}', [AdminContentController::class, 'update'])->name('content.update');
 
         // Admin Blog
         Route::get('/blog', [AdminBlogController::class, 'index'])->name('blog.index');
@@ -185,6 +188,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/dashboard', [AuthorDashboardController::class, 'index'])
              ->name('dashboard');
+
+        Route::get('/blog', [AuthorBlogController::class, 'index'])->name('blog.index');
+        Route::get('/blog/create', [AuthorBlogController::class, 'create'])->name('blog.create');
+        Route::post('/blog', [AuthorBlogController::class, 'store'])->name('blog.store');
+        Route::get('/blog/{id}/edit', [AuthorBlogController::class, 'edit'])->name('blog.edit');
+        Route::put('/blog/{id}', [AuthorBlogController::class, 'update'])->name('blog.update');
+        Route::delete('/blog/{id}', [AuthorBlogController::class, 'destroy'])->name('blog.destroy');
+        Route::patch('/blog/{id}/publish', [AuthorBlogController::class, 'publish'])->name('blog.publish');
 
     }); // end author group
 

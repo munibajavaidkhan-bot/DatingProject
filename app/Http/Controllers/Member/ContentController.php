@@ -38,9 +38,16 @@ class ContentController extends Controller
         $progress = UserContentProgress::where('user_id', $user->id)
             ->where('content_week_id', $content->id)->first();
 
-        // Check access
-        if ($content->is_premium && (!$progress || !$progress->is_unlocked)) {
-            if (!$user->isPremium()) {
+        $completedCount = UserContentProgress::where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->count();
+        $currentWeek = min($completedCount + 1, 52);
+
+        // Check access — first 4 weeks are free
+        $isFreeWeek = $content->week_number <= 4;
+        if ($content->is_premium && !$isFreeWeek) {
+            $hasAccess = ($progress && $progress->is_unlocked) || $user->isPremium() || $content->week_number <= $currentWeek;
+            if (!$hasAccess) {
                 return redirect()->route('member.plans')
                     ->with('info', 'Upgrade to Premium to access Week ' . $week);
             }

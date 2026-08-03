@@ -141,7 +141,11 @@ class QuizController extends Controller
             if (!isset($categories[$cat])) {
                 $categories[$cat] = ['total' => 0, 'count' => 0];
             }
-            $categories[$cat]['total'] += $answer->score;
+            $score = $answer->score ?: $this->calculateAnswerScore(
+                $answer->question,
+                is_array($answer->answer) ? $answer->answer : [$answer->answer]
+            );
+            $categories[$cat]['total'] += $score;
             $categories[$cat]['count']++;
         }
 

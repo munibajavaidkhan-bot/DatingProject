@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin'  => \App\Http\Middleware\AdminMiddleware::class,
             'author' => \App\Http\Middleware\AuthorMiddleware::class,
+            'profile.complete' => \App\Http\Middleware\EnsureProfileComplete::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

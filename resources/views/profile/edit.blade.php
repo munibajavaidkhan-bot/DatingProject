@@ -397,9 +397,8 @@
 
         {{-- Password Tab --}}
         <div id="tab-password" style="display:none;">
-            <form action="{{ route('profile.update') }}" method="POST">
-                @csrf @method('PATCH')
-                <input type="hidden" name="_tab" value="password">
+            <form action="{{ route('password.update') }}" method="POST">
+                @csrf @method('PUT')
 
                 <div class="glass-card">
                     <h5 style="font-weight:700;color:#1f2937;margin-bottom:20px;">Change Password</h5>

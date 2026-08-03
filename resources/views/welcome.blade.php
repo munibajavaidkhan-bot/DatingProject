@@ -75,7 +75,7 @@
                         <a class="nav-link" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#home">How It Works</a>
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#features">Features</a>
@@ -84,11 +84,33 @@
                         <a class="nav-link" href="#testimonials">Success Stories</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('terms') }}">Legal</a>
+                        <a class="nav-link" href="{{ route('pricing') }}">Pricing</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('terms') }}">Terms</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('privacy') }}">Privacy</a>
+                    </li>
+                    @auth
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : (auth()->user()->role === 'author' ? route('author.dashboard') : route('member.dashboard')) }}">
+                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                            @csrf
+                            <button type="submit" class="nav-link btn btn-link border-0" style="color:inherit;cursor:pointer;">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                    @else
                     <li class="nav-item">
                         <a class="nav-link btn-primary" href="{{ url('/login') }}">My Account</a>
                     </li>
+                    @endauth
                 </ul>
             </div>
         </div>
@@ -459,11 +481,12 @@
                         <div class="footer-widget">
                             <h4>Quick Links</h4>
                             <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">How It Works</a></li>
-                                <li><a href="#">Success Stories</a></li>
-                                <li><a href="#">Blog</a></li>
-                                <li><a href="#">Contact</a></li>
+                                <li><a href="#home">About Us</a></li>
+                                <li><a href="#how-it-works">How It Works</a></li>
+                                <li><a href="#testimonials">Success Stories</a></li>
+                                <li><a href="{{ route('pricing') }}">Pricing</a></li>
+                                <li><a href="{{ route('member.blog') }}">Blog</a></li>
+                                <li><a href="#home">Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -472,11 +495,11 @@
                         <div class="footer-widget">
                             <h4>Features</h4>
                             <ul>
-                                <li><a href="#">52 Weekly Lessons</a></li>
-                                <li><a href="#">Love Quiz</a></li>
-                                <li><a href="#">Personality Matches</a></li>
-                                <li><a href="#">Social Corner</a></li>
-                                <li><a href="#">Private Journals</a></li>
+                                <li><a href="{{ route('member.content') }}">52 Weekly Lessons</a></li>
+                                <li><a href="{{ route('member.quiz') }}">Love Quiz</a></li>
+                                <li><a href="{{ route('member.matches') }}">Personality Matches</a></li>
+                                <li><a href="{{ route('member.forum') }}">Social Corner</a></li>
+                                <li><a href="{{ route('member.discover') }}">Private Journals</a></li>
                             </ul>
                         </div>
                     </div>
@@ -548,8 +571,10 @@
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '#!') return;
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const target = document.querySelector(href);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',

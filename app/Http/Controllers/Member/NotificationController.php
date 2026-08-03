@@ -18,11 +18,6 @@ class NotificationController extends Controller
             ->latest()
             ->paginate(20);
 
-        // Mark all as read
-        Notification::where('user_id', $user->id)
-            ->where('is_read', false)
-            ->update(['is_read' => true, 'read_at' => now()]);
-
         return view('user.notifications', compact('notifications'));
     }
 

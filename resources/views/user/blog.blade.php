@@ -1,95 +1,119 @@
 @extends('layouts.user-layout')
+
 @section('title', 'Expert Advice — The Love Project')
+@section('page-title', 'Expert Advice')
 
 @section('content')
-<div class="w-screen h-screen bg-gradient-to-br from-rose-50 via-purple-50 to-pink-50 fixed top-0 left-0 -z-10"></div>
 
-<div class="max-w-7xl mx-auto px-4 py-8">
-    {{-- Header --}}
-    <div class="text-center mb-12">
-        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4" style="font-family: 'Playfair Display', serif;">The Love Journal</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Insights, advice, and stories from relationship experts to guide you on your journey to meaningful connection.</p>
-    </div>
+{{-- Hero --}}
+<div style="background:linear-gradient(135deg,#ec4899,#a855f7);border-radius:24px;padding:32px;color:white;margin-bottom:28px;text-align:center;">
+    <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:8px;">The Love Journal</h2>
+    <p style="opacity:0.9;font-size:14px;margin:0;max-width:560px;margin-left:auto;margin-right:auto;">
+        Insights, advice, and stories from relationship experts to guide you on your journey to meaningful connection.
+    </p>
+</div>
 
-    {{-- Category Filter --}}
-    @if($categories->count())
-    <div class="flex flex-wrap justify-center gap-3 mb-10">
-        <a href="{{ route('member.blog') }}"
-           class="px-5 py-2 rounded-full text-sm font-semibold transition {{ !request('category') ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white' : 'bg-white/70 text-gray-600 hover:bg-white' }}">
-            All
-        </a>
-        @foreach($categories as $cat)
-        <a href="{{ route('member.blog', ['category' => $cat->slug]) }}"
-           class="px-5 py-2 rounded-full text-sm font-semibold transition {{ request('category') === $cat->slug ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white' : 'bg-white/70 text-gray-600 hover:bg-white' }}">
-            {{ $cat->name }}
-        </a>
+{{-- Search --}}
+<div class="glass-card mb-4" style="padding:16px 20px;">
+    <form method="GET" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+        @if(request('category'))
+            <input type="hidden" name="category" value="{{ request('category') }}">
+        @endif
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search articles..."
+               style="flex:1;min-width:200px;padding:10px 16px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;outline:none;">
+        <button type="submit" style="background:linear-gradient(135deg,#ec4899,#a855f7);color:white;border:none;border-radius:12px;padding:10px 20px;font-weight:600;cursor:pointer;">
+            <i class="fas fa-search"></i>
+        </button>
+    </form>
+</div>
+
+{{-- Category Filter --}}
+@if($categories->count())
+<div class="d-flex flex-wrap gap-2 mb-4">
+    <a href="{{ route('member.blog') }}"
+       style="padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;text-decoration:none;
+              {{ !request('category') ? 'background:linear-gradient(135deg,#ec4899,#a855f7);color:white;' : 'background:rgba(255,255,255,0.8);color:#6b7280;' }}">
+        All
+    </a>
+    @foreach($categories as $cat)
+    <a href="{{ route('member.blog', ['category' => $cat->slug]) }}"
+       style="padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;text-decoration:none;
+              {{ request('category') === $cat->slug ? 'background:linear-gradient(135deg,#ec4899,#a855f7);color:white;' : 'background:rgba(255,255,255,0.8);color:#6b7280;' }}">
+        {{ $cat->name }}
+    </a>
+    @endforeach
+</div>
+@endif
+
+{{-- Featured --}}
+@if($featured->count() && !request('category') && !request('search'))
+<div class="mb-4">
+    <h5 style="font-family:'Playfair Display',serif;font-weight:700;color:#1f2937;margin-bottom:16px;">Featured</h5>
+    <div class="row g-3">
+        @foreach($featured as $fp)
+        <div class="col-md-4">
+            <a href="{{ route('member.blog.show', $fp->slug) }}" class="glass-card d-block text-decoration-none h-100" style="padding:20px;">
+                <span style="font-size:11px;font-weight:700;color:#ec4899;text-transform:uppercase;">{{ $fp->category?->name ?? 'Advice' }}</span>
+                <h6 style="font-weight:700;color:#1f2937;margin:8px 0 6px;line-height:1.4;">{{ $fp->title }}</h6>
+                <p style="font-size:13px;color:#6b7280;margin:0;">{{ Str::limit($fp->excerpt, 80) }}</p>
+            </a>
+        </div>
         @endforeach
     </div>
-    @endif
+</div>
+@endif
 
-    {{-- Featured --}}
-    @if($featured->count() && !request('category') && !request('search'))
-    <div class="mb-12">
-        <h2 class="text-2xl font-bold text-gray-800 mb-6" style="font-family:'Playfair Display',serif;">Featured</h2>
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach($featured as $fp)
-            <a href="{{ route('member.blog.show', $fp->slug) }}" class="group bg-white/70 backdrop-blur-md rounded-2xl p-6 shadow-lg border border-white/20 hover:shadow-xl transition text-decoration-none">
-                <span class="text-xs font-bold text-pink-600 uppercase">{{ $fp->category?->name ?? 'Advice' }}</span>
-                <h3 class="text-lg font-bold text-gray-800 mt-2 group-hover:text-pink-600 transition">{{ $fp->title }}</h3>
-                <p class="text-gray-600 text-sm mt-2">{{ Str::limit($fp->excerpt, 80) }}</p>
-            </a>
-            @endforeach
+{{-- Blog Grid --}}
+<div class="row g-4">
+    @forelse($posts as $post)
+    <div class="col-md-6 col-xl-4">
+        <div class="glass-card h-100" style="padding:0;overflow:hidden;">
+            <div style="height:180px;overflow:hidden;background:linear-gradient(135deg,#fce7f3,#f3e8ff);position:relative;">
+                <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800&auto=format&fit=crop"
+                     style="width:100%;height:100%;object-fit:cover;" alt="{{ $post->title }}">
+                @if($post->is_featured)
+                <span style="position:absolute;top:12px;left:12px;background:#ec4899;color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;">Featured</span>
+                @endif
+            </div>
+            <div style="padding:20px;">
+                <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#ec4899;font-weight:700;text-transform:uppercase;margin-bottom:8px;">
+                    <i class="fas fa-heart"></i>
+                    <span>{{ $post->category?->name ?? 'Advice' }}</span>
+                    <span style="color:#d1d5db;">•</span>
+                    <span style="color:#9ca3af;font-weight:500;">{{ $post->reading_time ?? 5 }} min read</span>
+                </div>
+                <h5 style="font-weight:700;color:#1f2937;margin-bottom:8px;line-height:1.4;">{{ $post->title }}</h5>
+                <p style="font-size:13px;color:#6b7280;line-height:1.6;margin-bottom:16px;">
+                    {{ Str::limit($post->excerpt ?? strip_tags($post->body), 120) }}
+                </p>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid rgba(236,72,153,0.08);">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <img src="{{ $post->author->getAvatarUrl() }}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;" alt="">
+                        <span style="font-size:12px;font-weight:600;color:#374151;">{{ $post->author->name }}</span>
+                    </div>
+                    <a href="{{ route('member.blog.show', $post->slug) }}" style="color:#ec4899;font-weight:700;font-size:13px;text-decoration:none;">
+                        Read More <i class="fas fa-arrow-right" style="font-size:10px;"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-    @endif
-
-    {{-- Blog Grid --}}
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @forelse($posts as $post)
-            <div class="group bg-white/70 backdrop-blur-md rounded-3xl overflow-hidden shadow-lg border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                <div class="relative h-56 overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800&auto=format&fit=crop" 
-                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ $post->title }}">
-                    <div class="absolute top-4 left-4">
-                        <span class="bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">New</span>
-                    </div>
-                </div>
-                <div class="p-6 lg:p-8">
-                    <div class="flex items-center gap-2 text-xs text-pink-600 font-bold uppercase tracking-wider mb-3">
-                        <i class="fas fa-heart"></i>
-                        <span>Advice</span>
-                        <span class="text-gray-300">•</span>
-                        <span>5 min read</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-3 group-hover:text-pink-600 transition">{{ $post->title }}</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed mb-6">
-                        {{ Str::limit($post->excerpt ?? strip_tags($post->body), 120) }}
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-3">
-                            <img src="{{ $post->author->getAvatarUrl() }}" class="w-8 h-8 rounded-full object-cover" alt="">
-                            <span class="text-xs font-semibold text-gray-700">{{ $post->author->name }}</span>
-                        </div>
-                        <a href="{{ route('member.blog.show', $post->slug) }}" class="text-pink-600 font-bold text-sm hover:underline flex items-center gap-1">
-                            Read More <i class="fas fa-arrow-right text-[10px]"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-span-full text-center py-20">
-                <div class="inline-block p-6 rounded-full bg-white/50 mb-6">
-                    <i class="fas fa-book-open text-4xl text-gray-300"></i>
-                </div>
-                <h3 class="text-2xl font-bold text-gray-400">Coming Soon</h3>
-                <p class="text-gray-500">Our experts are preparing new articles for you.</p>
-            </div>
-        @endforelse
+    @empty
+    <div class="col-12">
+        <div class="glass-card text-center" style="padding:60px 20px;">
+            <i class="fas fa-book-open" style="font-size:48px;color:#d1d5db;margin-bottom:16px;"></i>
+            <h4 style="font-weight:700;color:#9ca3af;margin-bottom:8px;">Coming Soon</h4>
+            <p style="color:#9ca3af;margin:0;">Our experts are preparing new articles for you.</p>
+        </div>
     </div>
-
-    {{-- Pagination --}}
-    <div class="mt-12">
-        {{ $posts->links() }}
-    </div>
+    @endforelse
 </div>
+
+{{-- Pagination --}}
+@if($posts->hasPages())
+<div class="mt-4 d-flex justify-content-center">
+    {{ $posts->links() }}
+</div>
+@endif
+
 @endsection

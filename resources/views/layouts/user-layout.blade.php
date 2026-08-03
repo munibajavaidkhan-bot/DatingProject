@@ -39,7 +39,8 @@
         /* ── Sidebar ─────────────────────────────── */
         .sidebar {
             width: 260px;
-            min-height: 100vh;
+            height: 100vh;
+            max-height: 100vh;
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(20px);
             border-right: 1px solid rgba(236,72,153,0.1);
@@ -49,12 +50,14 @@
             flex-direction: column;
             z-index: 1000;
             transition: transform .3s ease;
+            overflow: hidden;
         }
 
         .sidebar-logo {
             padding: 24px 20px;
             border-bottom: 1px solid rgba(236,72,153,0.1);
             text-align: center;
+            flex-shrink: 0;
         }
 
         .sidebar-logo img { height: 48px; }
@@ -74,6 +77,7 @@
             align-items: center;
             gap: 12px;
             border-bottom: 1px solid rgba(236,72,153,0.08);
+            flex-shrink: 0;
         }
 
         .sidebar-avatar {
@@ -100,7 +104,13 @@
             flex: 1;
             padding: 16px 12px;
             overflow-y: auto;
+            overflow-x: hidden;
+            min-height: 0;
+            -webkit-overflow-scrolling: touch;
         }
+
+        .sidebar-nav::-webkit-scrollbar { width: 5px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(236,72,153,0.25); border-radius: 10px; }
 
         .nav-section-label {
             font-size: 10px;
@@ -158,6 +168,8 @@
         .sidebar-footer {
             padding: 16px 12px;
             border-top: 1px solid rgba(236,72,153,0.08);
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.95);
         }
 
         /* ── Main Content ────────────────────────── */

@@ -100,8 +100,8 @@
 
     <div class="s-label">Content</div>
     <a href="{{ route('author.dashboard') }}" class="s-link active"><i class="fas fa-th-large"></i> Dashboard</a>
-    <a href="#" class="s-link"><i class="fas fa-book-open"></i> My Lessons <span class="s-pill">12</span></a>
-    <a href="#" class="s-link"><i class="fas fa-plus-circle"></i> New Lesson</a>
+    <a href="{{ route('author.blog.index') }}" class="s-link"><i class="fas fa-book-open"></i> My Articles <span class="s-pill">{{ $stats['published'] ?? 0 }}</span></a>
+    <a href="{{ route('author.blog.create') }}" class="s-link"><i class="fas fa-plus-circle"></i> New Article</a>
     <a href="#" class="s-link"><i class="fas fa-poll"></i> Quiz Builder</a>
     <a href="#" class="s-link"><i class="fas fa-images"></i> Media Library</a>
 
@@ -167,9 +167,9 @@
                 </h1>
                 <p style="color:#94a3b8;font-size:14px;margin:4px 0 0;">Manage your lessons, quiz content, and community contributions.</p>
             </div>
-            <a href="#" class="btn px-4 py-2 rounded-pill fw-bold text-white"
+            <a href="{{ route('author.blog.create') }}" class="btn px-4 py-2 rounded-pill fw-bold text-white"
                style="background:linear-gradient(135deg,#a855f7,#6366f1);border:none;font-size:14px;">
-                <i class="fas fa-plus me-2"></i>New Lesson
+                <i class="fas fa-plus me-2"></i>New Article
             </a>
         </div>
 
@@ -178,24 +178,24 @@
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-icon" style="background:#f5f3ff;">📚</div>
-                    <div class="stat-val">12</div>
-                    <div class="stat-lbl">Published Lessons</div>
+                    <div class="stat-val">{{ $stats['published'] }}</div>
+                    <div class="stat-lbl">Published Articles</div>
                     <div class="mt-2" style="font-size:12px;color:#22c55e;font-weight:700;">↑ 2 this month</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-icon" style="background:#fce7f3;">👁️</div>
-                    <div class="stat-val">8.4K</div>
-                    <div class="stat-lbl">Total Lesson Views</div>
+                    <div class="stat-val">{{ number_format($stats['total_views']) }}</div>
+                    <div class="stat-lbl">Total Article Views</div>
                     <div class="mt-2" style="font-size:12px;color:#22c55e;font-weight:700;">↑ +18% this week</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card">
                     <div class="stat-icon" style="background:#dcfce7;">✅</div>
-                    <div class="stat-val">94%</div>
-                    <div class="stat-lbl">Completion Rate</div>
+                    <div class="stat-val">{{ $stats['drafts'] }}</div>
+                    <div class="stat-lbl">Draft Articles</div>
                     <div class="mt-2" style="font-size:12px;color:#22c55e;font-weight:700;">↑ Above average</div>
                 </div>
             </div>
@@ -216,43 +216,28 @@
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <div>
                             <div class="card-title-sm">Content Management</div>
-                            <div class="card-title mb-0">My Lessons</div>
+                            <div class="card-title mb-0">My Articles</div>
                         </div>
-                        <a href="#" class="action-sm edit">+ New</a>
+                        <a href="{{ route('author.blog.create') }}" class="action-sm edit">+ New</a>
                     </div>
-                    <p style="font-size:13px;color:#94a3b8;margin-bottom:20px;">Your published, draft, and scheduled lessons.</p>
+                    <p style="font-size:13px;color:#94a3b8;margin-bottom:20px;">Your recent blog articles.</p>
 
-                    @php
-                    $lessons = [
-                        ['week'=>3,'label'=>'Wk 3','color'=>'#ec4899','title'=>'How to Open Up Again','subtitle'=>'Vulnerability & Courage','views'=>1840,'status'=>'live'],
-                        ['week'=>4,'label'=>'Wk 4','color'=>'#a855f7','title'=>'Understanding Attachment Styles','subtitle'=>'Avoidant vs. Anxious','views'=>1620,'status'=>'live'],
-                        ['week'=>5,'label'=>'Wk 5','color'=>'#6366f1','title'=>'Self-Discovery Before Partnership','subtitle'=>'Journaling Prompts','views'=> 980,'status'=>'live'],
-                        ['week'=>6,'label'=>'Wk 6','color'=>'#f97316','title'=>'Breaking Unhealthy Patterns','subtitle'=>'Cognitive Reframing','views'=>0,'status'=>'draft'],
-                        ['week'=>7,'label'=>'Wk 7','color'=>'#10b981','title'=>'Communicating Needs Clearly','subtitle'=>'Non-Violent Communication','views'=>0,'status'=>'scheduled'],
-                    ];
-                    @endphp
-
-                    @foreach($lessons as $l)
+                    @forelse($recentPosts as $post)
                     <div class="lesson-row">
-                        <div class="week-badge" style="background:{{ $l['color'] }};">{{ $l['label'] }}</div>
+                        <div class="week-badge" style="background:#a855f7;">{{ strtoupper(substr($post->status, 0, 1)) }}</div>
                         <div class="flex-1">
-                            <div style="font-weight:700;font-size:14px;color:#1e293b;">{{ $l['title'] }}</div>
-                            <div style="font-size:12px;color:#94a3b8;">{{ $l['subtitle'] }}
-                                @if($l['views'] > 0)
-                                 — <strong style="color:#64748b;">{{ number_format($l['views']) }} views</strong>
-                                @endif
+                            <div style="font-weight:700;font-size:14px;color:#1e293b;">{{ Str::limit($post->title, 50) }}</div>
+                            <div style="font-size:12px;color:#94a3b8;">
+                                {{ ucfirst($post->status) }} — {{ $post->views }} views — {{ $post->created_at->diffForHumans() }}
                             </div>
                         </div>
-                        <span class="status-chip {{ $l['status'] }}">{{ ucfirst($l['status']) }}</span>
                         <div class="d-flex gap-2">
-                            <a href="#" class="action-sm edit">Edit</a>
-                            @if($l['status'] === 'draft')
-                            <a href="#" class="action-sm pub">Publish</a>
-                            @endif
-                            <a href="#" class="action-sm del">Del</a>
+                            <a href="{{ route('author.blog.edit', $post->id) }}" class="action-sm edit">Edit</a>
                         </div>
                     </div>
-                    @endforeach
+                    @empty
+                    <p style="color:#94a3b8;font-size:14px;">No articles yet. <a href="{{ route('author.blog.create') }}">Write your first post</a></p>
+                    @endforelse
                 </div>
             </div>
 
@@ -264,14 +249,14 @@
                     <div class="card-title-sm">Quick Actions</div>
                     <div class="card-title">Shortcuts</div>
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn py-2 fw-semibold rounded-3 text-white" style="background:linear-gradient(135deg,#a855f7,#6366f1);border:none;font-size:14px;">
-                            <i class="fas fa-plus me-2"></i>Create New Lesson
+                        <a href="{{ route('author.blog.create') }}" class="btn py-2 fw-semibold rounded-3 text-white" style="background:linear-gradient(135deg,#a855f7,#6366f1);border:none;font-size:14px;">
+                            <i class="fas fa-plus me-2"></i>Create New Article
                         </a>
-                        <a href="#" class="btn py-2 fw-semibold rounded-3" style="background:#f5f3ff;color:#7c3aed;border:none;font-size:14px;">
-                            <i class="fas fa-poll me-2"></i>Build a Quiz
+                        <a href="{{ route('author.blog.index') }}" class="btn py-2 fw-semibold rounded-3" style="background:#f5f3ff;color:#7c3aed;border:none;font-size:14px;">
+                            <i class="fas fa-newspaper me-2"></i>All Articles
                         </a>
-                        <a href="#" class="btn py-2 fw-semibold rounded-3" style="background:#fce7f3;color:#be185d;border:none;font-size:14px;">
-                            <i class="fas fa-comments me-2"></i>Review Forum Posts
+                        <a href="{{ route('member.forum') }}" class="btn py-2 fw-semibold rounded-3" style="background:#fce7f3;color:#be185d;border:none;font-size:14px;">
+                            <i class="fas fa-comments me-2"></i>Community Forum
                         </a>
                         <a href="{{ route('profile.edit') }}" class="btn py-2 fw-semibold rounded-3" style="background:#f1f5f9;color:#475569;border:none;font-size:14px;">
                             <i class="fas fa-user-edit me-2"></i>Edit Profile
@@ -279,36 +264,14 @@
                     </div>
                 </div>
 
-                <!-- Flagged Comments Queue -->
                 <div class="content-card">
-                    <div class="card-title-sm">Moderation Queue</div>
-                    <div class="card-title">Comments to Review</div>
-
-                    @php
-                    $comments = [
-                        ['i'=>'JL','color'=>'#6366f1','name'=>'Jessica L.','text'=>'This lesson really helped me understand why I keep…','lesson'=>'Wk 3'],
-                        ['i'=>'MR','color'=>'#f97316','name'=>'Marcus R.','text'=>'Can you add more examples for this section? I feel…','lesson'=>'Wk 4'],
-                        ['i'=>'AP','color'=>'#a855f7','name'=>'Alisha P.','text'=>'Something in this prompt felt personal. Wondering if…','lesson'=>'Wk 5'],
-                        ['i'=>'TK','color'=>'#10b981','name'=>'Tom K.','text'=>'I think this conflicts with what was said in week 2…','lesson'=>'Wk 4'],
-                    ];
-                    @endphp
-
-                    @foreach($comments as $c)
-                    <div class="comment-item">
-                        <div class="c-avatar" style="background:{{ $c['color'] }};">{{ $c['i'] }}</div>
-                        <div class="flex-1">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span style="font-weight:700;font-size:13px;color:#1e293b;">{{ $c['name'] }}</span>
-                                <span style="font-size:11px;background:#ede9fe;color:#6d28d9;padding:2px 8px;border-radius:10px;font-weight:700;">{{ $c['lesson'] }}</span>
-                            </div>
-                            <p style="font-size:12px;color:#64748b;margin:2px 0 6px;line-height:1.4;">{{ $c['text'] }}</p>
-                            <div class="d-flex gap-2">
-                                <a href="#" class="action-sm pub" style="font-size:11px;padding:3px 10px;">Approve</a>
-                                <a href="#" class="action-sm del" style="font-size:11px;padding:3px 10px;">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
+                    <div class="card-title-sm">Tips</div>
+                    <div class="card-title">Writing for The Love Journal</div>
+                    <p style="font-size:13px;color:#64748b;line-height:1.6;margin:0;">
+                        Publish relationship advice articles from your author dashboard. Published posts appear on the member blog at
+                        <strong>Expert Advice</strong>.
+                    </p>
+                    <a href="{{ route('member.blog') }}" class="action-sm edit mt-3 d-inline-block">View public blog</a>
                 </div>
 
             </div>

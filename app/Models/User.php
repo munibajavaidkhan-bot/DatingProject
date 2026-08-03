@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
+use App\Models\QuizQuestion;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -150,7 +151,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasCompletedQuiz(): bool
     {
-        return $this->quizAnswers()->count() >= 10;
+        $total = QuizQuestion::where('is_active', true)->count();
+
+        return $total > 0 && $this->quizAnswers()->count() >= $total;
     }
 
     public function isPremium(): bool

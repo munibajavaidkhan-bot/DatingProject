@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             PlansSeeder::class,
             ContentSeeder::class,
             QuizAnswersSeeder::class,
+            MatchSeeder::class,
         ]);
 
         $this->command->info('');

@@ -10,7 +10,10 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::hasTable('users') && Schema::hasColumn('users', 'status')) {
-            DB::statement("ALTER TABLE users MODIFY status ENUM('active','suspended','pending','banned') NOT NULL DEFAULT 'active'");
+            $driver = Schema::getConnection()->getDriverName();
+            if ($driver === 'mysql') {
+                DB::statement("ALTER TABLE users MODIFY status ENUM('active','suspended','pending','banned') NOT NULL DEFAULT 'active'");
+            }
         }
 
         if (Schema::hasTable('forum_categories') && !Schema::hasColumn('forum_categories', 'threads_count')) {

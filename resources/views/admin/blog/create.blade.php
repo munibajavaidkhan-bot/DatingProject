@@ -5,11 +5,20 @@
 
 @section('content')
 
-<div class="admin-card" style="max-width:700px;">
-  <p style="color:#9ca3af;font-size:14px;">Blog post creation form coming soon. Use the seeder or database to add posts for now.</p>
-  <a href="{{ route('admin.blog.index') }}" style="color:#ec4899;text-decoration:none;font-size:14px;font-weight:600;">
-    <i class="fas fa-arrow-left me-2"></i>Back to Posts
-  </a>
+<div class="admin-card" style="max-width:800px;">
+    @if($errors->any())
+    <div style="background:rgba(239,68,68,0.15);border:1px solid #ef4444;border-radius:12px;padding:14px;margin-bottom:20px;">
+        @foreach($errors->all() as $error)<p style="color:#ef4444;font-size:13px;margin:0;">• {{ $error }}</p>@endforeach
+    </div>
+    @endif
+
+    <form action="{{ route('admin.blog.store') }}" method="POST">
+        @csrf
+        @include('admin.blog._form', ['post' => null])
+        <button type="submit" style="background:linear-gradient(135deg,#ec4899,#a855f7);color:white;border:none;border-radius:10px;padding:12px 24px;font-weight:600;cursor:pointer;margin-top:16px;">
+            Create Post
+        </button>
+    </form>
 </div>
 
 @endsection
