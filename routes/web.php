@@ -14,19 +14,54 @@ use App\Http\Controllers\Member\PlanController;
 use App\Http\Controllers\Member\ContentController;
 use App\Http\Controllers\Member\NotificationController;
 use App\Http\Controllers\Member\LikeController;
+use App\Http\Controllers\Member\PoemController;
+use App\Http\Controllers\Member\ArticleController;
+use App\Http\Controllers\Member\StoryController;
+use App\Http\Controllers\Public\JourneyController;
+use App\Http\Controllers\Public\AuthorPageController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PoemController as AdminPoemController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\ForumController as AdminForumController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
+use App\Http\Controllers\Admin\StoryController as AdminStoryController;
+use App\Http\Controllers\Admin\ChatController as AdminChatController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Author\DashboardController as AuthorDashboardController;
 use App\Http\Controllers\Author\BlogController as AuthorBlogController;
+use App\Http\Controllers\Author\PoemController as AuthorPoemController;
+use App\Http\Controllers\Author\ArticleController as AuthorArticleController;
+use App\Http\Controllers\Author\StoryController as AuthorStoryController;
 
 // ── Public Routes ─────────────────────────────────────────────
 Route::get('/', fn() => view('welcome'))->name('welcome');
+Route::post('/verify-age', function () {
+    session(['age_verified' => true]);
+    return response()->json(['success' => true]);
+})->name('verify.age');
 Route::get('/pricing', [PlanController::class, 'publicIndex'])->name('pricing');
 Route::get('/terms', fn() => view('terms'))->name('terms');
 Route::get('/privacy', fn() => view('privacy'))->name('privacy');
+
+// ── Poems (public) ────────────────────────────────────────────
+Route::get('/poems', [PoemController::class, 'index'])->name('poems.index');
+Route::get('/poems/{slug}', [PoemController::class, 'show'])->name('poems.show');
+
+// ── Articles (public) ─────────────────────────────────────────
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
+
+// ── Stories (public) ──────────────────────────────────────────
+Route::get('/stories', [StoryController::class, 'index'])->name('stories.index');
+Route::get('/stories/{slug}', [StoryController::class, 'show'])->name('stories.show');
+
+// ── 52-Week Journey (public preview) ──────────────────────────
+Route::get('/journey', [JourneyController::class, 'index'])->name('journey');
+
+// ── Author Page (public) ─────────────────────────────────────
+Route::get('/author/{slug}', [AuthorPageController::class, 'show'])->name('author.page');
 
 // ── Authenticated Routes ───────────────────────────────────────
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -45,8 +80,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
          ->name('profile.destroy');
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])
          ->name('profile.photo');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+         ->name('profile.password');
     Route::get('/profile/{id}', [ProfileController::class, 'show'])
          ->name('profile.show');
+    Route::get('/profile-pending', function () {
+        return view('profile.pending');
+    })->name('profile.pending');
 
     // ── Member Routes ─────────────────────────────────────────
     Route::prefix('member')->name('member.')->middleware('profile.complete')->group(function () {
@@ -78,6 +118,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // ── Chat ──────────────────────────────────────────────
         Route::get('/chat', [ChatController::class, 'index'])
              ->name('chat');
+        Route::post('/chat/accept-disclaimer', [ChatController::class, 'acceptSafetyDisclaimer'])
+             ->name('chat.accept-disclaimer');
         Route::get('/chat/{matchId}', [ChatController::class, 'show'])
              ->name('chat.show');
         Route::post('/chat/{matchId}/send', [ChatController::class, 'send'])
@@ -88,6 +130,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
              ->name('chat.poll');
         Route::get('/chat/unread/count', [ChatController::class, 'unreadCount'])
              ->name('chat.unread');
+        Route::post('/chat/message/{messageId}/reaction', [ChatController::class, 'toggleReaction'])
+             ->name('chat.reaction');
+        Route::get('/chat/message/{messageId}/reactions', [ChatController::class, 'getReactions'])
+             ->name('chat.reactions');
 
         // ── Quiz ──────────────────────────────────────────────
         Route::get('/quiz', [QuizController::class, 'welcome'])
@@ -164,6 +210,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('/users/{id}/toggle-status', [AdminUserController::class, 'toggleStatus'])
              ->name('users.toggle-status');
 
+        // Profile Approvals
+        Route::get('/approvals', [AdminUserController::class, 'pendingApprovals'])->name('approvals');
+        Route::post('/approvals/{profileId}/approve', [AdminUserController::class, 'approveProfile'])->name('approvals.approve');
+        Route::post('/approvals/{profileId}/reject', [AdminUserController::class, 'rejectProfile'])->name('approvals.reject');
+
         // Admin Content
         Route::get('/content', [AdminContentController::class, 'index'])->name('content.index');
         Route::get('/content/{id}/edit', [AdminContentController::class, 'edit'])->name('content.edit');
@@ -181,6 +232,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/forum', [AdminForumController::class, 'index'])->name('forum');
         Route::delete('/forum/{id}', [AdminForumController::class, 'deleteThread'])->name('forum.destroy');
 
+        // Admin Poems
+        Route::get('/poems', [AdminPoemController::class, 'index'])->name('poems.index');
+        Route::get('/poems/create', [AdminPoemController::class, 'create'])->name('poems.create');
+        Route::post('/poems', [AdminPoemController::class, 'store'])->name('poems.store');
+        Route::get('/poems/{id}/edit', [AdminPoemController::class, 'edit'])->name('poems.edit');
+        Route::put('/poems/{id}', [AdminPoemController::class, 'update'])->name('poems.update');
+        Route::delete('/poems/{id}', [AdminPoemController::class, 'destroy'])->name('poems.destroy');
+
+        // Admin Articles
+        Route::get('/articles', [AdminArticleController::class, 'index'])->name('articles.index');
+        Route::get('/articles/create', [AdminArticleController::class, 'create'])->name('articles.create');
+        Route::post('/articles', [AdminArticleController::class, 'store'])->name('articles.store');
+        Route::get('/articles/{id}/edit', [AdminArticleController::class, 'edit'])->name('articles.edit');
+        Route::put('/articles/{id}', [AdminArticleController::class, 'update'])->name('articles.update');
+        Route::delete('/articles/{id}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
+
+        // Admin Stories
+        Route::get('/stories', [AdminStoryController::class, 'index'])->name('stories.index');
+        Route::get('/stories/create', [AdminStoryController::class, 'create'])->name('stories.create');
+        Route::post('/stories', [AdminStoryController::class, 'store'])->name('stories.store');
+        Route::get('/stories/{id}/edit', [AdminStoryController::class, 'edit'])->name('stories.edit');
+        Route::put('/stories/{id}', [AdminStoryController::class, 'update'])->name('stories.update');
+        Route::delete('/stories/{id}', [AdminStoryController::class, 'destroy'])->name('stories.destroy');
+
+        // Admin Chat
+        Route::get('/chat', [AdminChatController::class, 'index'])->name('chat.index');
+        Route::get('/chat/{matchId}', [AdminChatController::class, 'show'])->name('chat.show');
+        Route::delete('/chat/message/{messageId}', [AdminChatController::class, 'destroyMessage'])->name('chat.message.destroy');
+        Route::delete('/chat/{matchId}', [AdminChatController::class, 'destroyMatch'])->name('chat.destroy');
+
+        // Admin Settings
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+
     }); // end admin group
 
     // ── Author Routes ─────────────────────────────────────────
@@ -196,6 +281,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/blog/{id}', [AuthorBlogController::class, 'update'])->name('blog.update');
         Route::delete('/blog/{id}', [AuthorBlogController::class, 'destroy'])->name('blog.destroy');
         Route::patch('/blog/{id}/publish', [AuthorBlogController::class, 'publish'])->name('blog.publish');
+
+        // Author Poems
+        Route::get('/poems', [AuthorPoemController::class, 'index'])->name('poems.index');
+        Route::get('/poems/create', [AuthorPoemController::class, 'create'])->name('poems.create');
+        Route::post('/poems', [AuthorPoemController::class, 'store'])->name('poems.store');
+        Route::get('/poems/{id}/edit', [AuthorPoemController::class, 'edit'])->name('poems.edit');
+        Route::put('/poems/{id}', [AuthorPoemController::class, 'update'])->name('poems.update');
+        Route::delete('/poems/{id}', [AuthorPoemController::class, 'destroy'])->name('poems.destroy');
+        Route::patch('/poems/{id}/publish', [AuthorPoemController::class, 'publish'])->name('poems.publish');
+
+        // Author Articles
+        Route::get('/articles', [AuthorArticleController::class, 'index'])->name('articles.index');
+        Route::get('/articles/create', [AuthorArticleController::class, 'create'])->name('articles.create');
+        Route::post('/articles', [AuthorArticleController::class, 'store'])->name('articles.store');
+        Route::get('/articles/{id}/edit', [AuthorArticleController::class, 'edit'])->name('articles.edit');
+        Route::put('/articles/{id}', [AuthorArticleController::class, 'update'])->name('articles.update');
+        Route::delete('/articles/{id}', [AuthorArticleController::class, 'destroy'])->name('articles.destroy');
+        Route::patch('/articles/{id}/publish', [AuthorArticleController::class, 'publish'])->name('articles.publish');
+
+        // Author Stories
+        Route::get('/stories', [AuthorStoryController::class, 'index'])->name('stories.index');
+        Route::get('/stories/create', [AuthorStoryController::class, 'create'])->name('stories.create');
+        Route::post('/stories', [AuthorStoryController::class, 'store'])->name('stories.store');
+        Route::get('/stories/{id}/edit', [AuthorStoryController::class, 'edit'])->name('stories.edit');
+        Route::put('/stories/{id}', [AuthorStoryController::class, 'update'])->name('stories.update');
+        Route::delete('/stories/{id}', [AuthorStoryController::class, 'destroy'])->name('stories.destroy');
+        Route::patch('/stories/{id}/publish', [AuthorStoryController::class, 'publish'])->name('stories.publish');
 
     }); // end author group
 

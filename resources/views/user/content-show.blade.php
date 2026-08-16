@@ -53,6 +53,17 @@
         </div>
         @endif
 
+        {{-- Safety Reminder --}}
+        <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:14px;padding:16px 20px;margin-bottom:24px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <i class="fas fa-shield-halved" style="color:#3b82f6;font-size:16px;"></i>
+                <span style="color:#1e40af;font-size:13px;font-weight:700;">Relationship Safety Reminder</span>
+            </div>
+            <p style="color:#1d4ed8;font-size:12px;line-height:1.5;margin:0;">
+                Healthy relationships are built on trust, respect, and open communication. Take things at your own pace, and never feel pressured to share more than you're comfortable with.
+            </p>
+        </div>
+
         {{-- Reflection Questions --}}
         @if($content->reflection_questions)
         <div class="glass-card mb-4">

@@ -12,9 +12,16 @@ class EnsureProfileComplete
     {
         $user = $request->user();
 
-        if ($user && $user->isUser() && !$user->profile?->is_complete) {
-            return redirect()->route('profile.complete')
-                ->with('info', 'Please complete your profile to continue.');
+        if ($user && $user->isUser()) {
+            if (!$user->profile?->is_complete) {
+                return redirect()->route('profile.complete')
+                    ->with('info', 'Please complete your profile to continue.');
+            }
+
+            if ($user->profile?->is_complete && !$user->profile?->is_approved) {
+                return redirect()->route('profile.pending')
+                    ->with('info', 'Your profile is under review. Please wait for admin approval.');
+            }
         }
 
         return $next($request);

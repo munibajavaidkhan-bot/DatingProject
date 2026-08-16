@@ -125,23 +125,45 @@
         <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
             <i class="fas fa-users"></i> All Users
         </a>
+        <a href="{{ route('admin.approvals') }}" class="{{ request()->routeIs('admin.approvals*') ? 'active' : '' }}">
+            <i class="fas fa-user-check"></i> Profile Approvals
+            @php $pendingCount = \App\Models\Profile::where('is_complete', true)->where('is_approved', false)->count(); @endphp
+            @if($pendingCount > 0)
+                <span style="background:#ef4444;color:white;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:auto;">{{ $pendingCount }}</span>
+            @endif
+        </a>
 
         <div class="admin-nav-label">Content</div>
         <a href="{{ route('admin.blog.index') }}" class="{{ request()->routeIs('admin.blog*') ? 'active' : '' }}">
             <i class="fas fa-newspaper"></i> Blog Posts
         </a>
+        <a href="{{ route('admin.articles.index') }}" class="{{ request()->routeIs('admin.articles*') ? 'active' : '' }}">
+            <i class="fas fa-file-lines"></i> Articles
+        </a>
+        <a href="{{ route('admin.stories.index') }}" class="{{ request()->routeIs('admin.stories*') ? 'active' : '' }}">
+            <i class="fas fa-book-open"></i> Stories
+        </a>
         <a href="{{ route('admin.content.index') }}" class="{{ request()->routeIs('admin.content*') ? 'active' : '' }}">
             <i class="fas fa-book"></i> 52 Weeks
+        </a>
+        <a href="{{ route('admin.poems.index') }}" class="{{ request()->routeIs('admin.poems*') ? 'active' : '' }}">
+            <i class="fas fa-heart"></i> Poems
         </a>
         <a href="{{ route('admin.forum') }}" class="{{ request()->routeIs('admin.forum*') ? 'active' : '' }}">
             <i class="fas fa-comments"></i> Forum
         </a>
+        <a href="{{ route('admin.chat.index') }}" class="{{ request()->routeIs('admin.chat*') ? 'active' : '' }}">
+            <i class="fas fa-message"></i> Chat Monitor
+        </a>
 
         <div class="admin-nav-label">System</div>
+        <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+            <i class="fas fa-sliders"></i> Feature Toggles
+        </a>
         <a href="{{ route('member.dashboard') }}">
             <i class="fas fa-arrow-left"></i> Back to Site
         </a>
-        <form action="{{ route('logout') }}" method="POST" style="margin:0;">
+        <form action="{{ route('admin.logout') }}" method="POST" style="margin:0;">
             @csrf
             <button type="submit" style="width:100%;background:none;border:none;color:#ef4444;font-size:13px;font-weight:500;padding:10px 14px;border-radius:10px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px;">
                 <i class="fas fa-right-from-bracket" style="width:18px;text-align:center;"></i> Sign Out

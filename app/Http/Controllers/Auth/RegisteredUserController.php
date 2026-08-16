@@ -47,6 +47,13 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Send welcome email
+        try {
+            \Mail::to($user->email)->send(new \App\Mail\WelcomeMail($user));
+        } catch (\Exception $e) {
+            // Don't fail registration if email fails
+        }
+
         return redirect(route('verification.notice'));
     }
 }

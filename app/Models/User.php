@@ -15,7 +15,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $fillable = [
         'name', 'email', 'password',
-        'role', 'status',
+        'role', 'status', 'safety_disclaimer_accepted',
         'gender', 'dob', 'location', 'bio', 'profile_picture',
     ];
 
@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password'          => 'hashed',
+        'safety_disclaimer_accepted' => 'boolean',
     ];
 
     // ─── Role Constants ───────────────────────────────────────
@@ -160,9 +161,95 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $sub = $this->subscription()
             ->where('status', 'active')
-            ->where('expires_at', '>', now())
+            ->where('expiry_date', '>', now())
             ->first();
 
         return $sub !== null;
+    }
+
+    /**
+     * Check if user can access chat (any active plan including free)
+     */
+    public function canAccessChat(): bool
+    {
+        // Free users get limited chat (10 messages/day)
+        // Basic+ users get unlimited chat
+        return true; // All users can chat, limits enforced separately
+    }
+
+    /**
+     * Get user's current plan
+     */
+    public function getCurrentPlan(): ?Plan
+    {
+        $sub = $this->subscription()
+            ->where('status', 'active')
+            ->where('expiry_date', '>', now())
+            ->with('plan')
+            ->first();
+
+        return $sub?->plan;
+    }
+
+    /**
+     * Get daily message limit based on plan
+     */
+    public function getMessageLimit(): int
+    {
+        $plan = $this->getCurrentPlan();
+        return $plan?->messages_per_day ?? 10; // Free tier default
+    }
+
+    /**
+     * Get daily matches limit based on plan
+     */
+    public function getMatchLimit(): int
+    {
+        $plan = $this->getCurrentPlan();
+        return $plan?->matches_per_day ?? 3; // Free tier default
+    }
+
+    /**
+     * Check if user has sent too many messages today
+     */
+    public function hasExceededDailyMessages(): bool
+    {
+        $limit = $this->getMessageLimit();
+        $todayMessages = \App\Models\Message::where('sender_id', $this->id)
+            ->whereDate('created_at', today())
+            ->count();
+
+        return $todayMessages >= $limit;
+    }
+
+    /**
+     * Calculate distance to another user
+     */
+    public function distanceTo(User $other): ?float
+    {
+        $myProfile = $this->profile;
+        $otherProfile = $other->profile;
+
+        if (!$myProfile?->latitude || !$otherProfile?->latitude) {
+            return null;
+        }
+
+        $service = new \App\Services\LocationService();
+        return $service->getDistanceBetween($myProfile, $otherProfile);
+    }
+
+    /**
+     * Format distance to another user
+     */
+    public function formatDistanceTo(User $other): string
+    {
+        $distance = $this->distanceTo($other);
+
+        if ($distance === null) {
+            return 'Unknown distance';
+        }
+
+        $service = new \App\Services\LocationService();
+        return $service->formatDistance($distance);
     }
 }

@@ -19,7 +19,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
@@ -28,6 +28,7 @@
     <link href="assets/css/m-style.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
     <link href="assets/css/newcss.css" rel="stylesheet">
+    <link href="assets/css/site-header-footer.css" rel="stylesheet">
     
     <!-- WOW.js Animation CSS -->
     <style>
@@ -59,62 +60,7 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="#home">
-                <img src="assets/images/love_logo.png" alt="The Love Project" height="50">
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#how-it-works">How It Works</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#features">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#testimonials">Success Stories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('pricing') }}">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('terms') }}">Terms</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('privacy') }}">Privacy</a>
-                    </li>
-                    @auth
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : (auth()->user()->role === 'author' ? route('author.dashboard') : route('member.dashboard')) }}">
-                            <i class="fas fa-tachometer-alt me-1"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-link border-0" style="color:inherit;cursor:pointer;">
-                                <i class="fas fa-sign-out-alt me-1"></i> Logout
-                            </button>
-                        </form>
-                    </li>
-                    @else
-                    <li class="nav-item">
-                        <a class="nav-link btn-primary" href="{{ url('/login') }}">My Account</a>
-                    </li>
-                    @endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('partials.site-header', ['active' => 'home'])
 
     <main>
 
@@ -459,88 +405,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="footer-section">
-            <div class="container">
-                <div class="row g-5">
-                    <div class="col-lg-4">
-                        <div class="footer-widget">
-                            <div class="footer-logo">
-                                <img src="assets/images/love_logo.png" alt="The Love Project" class="img-fluid">
-                            </div>
-                            <p>52 Weeks to Forever — lessons, quizzes & curated matches for meaningful, long-lasting love. Join us in finding your perfect story.</p>
-                            <div class="social-links">
-                                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-2 col-md-6">
-                        <div class="footer-widget">
-                            <h4>Quick Links</h4>
-                            <ul>
-                                <li><a href="#home">About Us</a></li>
-                                <li><a href="#how-it-works">How It Works</a></li>
-                                <li><a href="#testimonials">Success Stories</a></li>
-                                <li><a href="{{ route('pricing') }}">Pricing</a></li>
-                                <li><a href="{{ route('member.blog') }}">Blog</a></li>
-                                <li><a href="#home">Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-2 col-md-6">
-                        <div class="footer-widget">
-                            <h4>Features</h4>
-                            <ul>
-                                <li><a href="{{ route('member.content') }}">52 Weekly Lessons</a></li>
-                                <li><a href="{{ route('member.quiz') }}">Love Quiz</a></li>
-                                <li><a href="{{ route('member.matches') }}">Personality Matches</a></li>
-                                <li><a href="{{ route('member.forum') }}">Social Corner</a></li>
-                                <li><a href="{{ route('member.discover') }}">Private Journals</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4">
-                        <div class="footer-widget">
-                            <h4>Newsletter</h4>
-                            <p>Don't miss out on love tips, success stories, and exclusive offers.</p>
-                            <div class="newsletter-form">
-                                <form>
-                                    <div class="input-group">
-                                        <input type="email" class="form-control" placeholder="Your Email">
-                                        <button class="btn" type="submit">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-        <!-- Footer Bottom -->
-        <div class="ftr-btm">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-6">
-                        <p class="mb-0">© 2018-2026 The Love Project. All rights reserved.</p>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <ul>
-                            <li><a href="{{ route('terms') }}">Terms</a></li>
-                            <li><a href="{{ route('privacy') }}">Privacy</a></li>
-                            <li><a href="#">Cookies</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('partials.site-footer', ['active' => 'home'])
 
     </main>
 
@@ -560,10 +425,10 @@
 
         // Header Scroll Effect
         window.addEventListener('scroll', function() {
-            const header = document.querySelector('.navbar');
-            if (window.scrollY > 100) {
+            const header = document.querySelector('.site-header');
+            if (header && window.scrollY > 100) {
                 header.classList.add('sticky');
-            } else {
+            } else if (header) {
                 header.classList.remove('sticky');
             }
         });
@@ -572,7 +437,7 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
-                if (href === '#' || href === '#!') return;
+                if (href === '#' || href === '#!' || href.startsWith('/#')) return;
                 e.preventDefault();
                 const target = document.querySelector(href);
                 if (target) {
@@ -583,7 +448,7 @@
                     
                     // Close mobile menu if open
                     const navbarCollapse = document.querySelector('.navbar-collapse');
-                    if (navbarCollapse.classList.contains('show')) {
+                    if (navbarCollapse && navbarCollapse.classList.contains('show')) {
                         navbarCollapse.classList.remove('show');
                     }
                 }
@@ -603,28 +468,53 @@
         }
 
         requestAnimationFrame(raf);
-
-        // Active nav link on scroll
-        const sections = document.querySelectorAll('section[id]');
-        
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 150;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        });
     </script>
+
+    {{-- Age Disclaimer Modal --}}
+    @if(!session('age_verified'))
+    <div id="ageModal" style="position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:24px;padding:40px;max-width:440px;width:90%;box-shadow:0 25px 60px rgba(0,0,0,0.4);text-align:center;">
+            <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#ec4899,#a855f7);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                <i class="fas fa-heart" style="font-size:32px;color:white;"></i>
+            </div>
+            <h2 style="color:#1f2937;font-size:22px;font-weight:700;margin-bottom:8px;">Age Verification Required</h2>
+            <p style="color:#6b7280;font-size:14px;line-height:1.7;margin-bottom:24px;">
+                This website contains age-restricted content. By entering, you confirm that you are at least <strong>18 years of age</strong>.
+            </p>
+            <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:24px;">
+                <p style="color:#374151;font-size:12px;line-height:1.6;margin:0;">
+                    By clicking "I Am 18+", you agree to our 
+                    <a href="{{ route('terms') }}" style="color:#a855f7;">Terms & Conditions</a> and 
+                    <a href="{{ route('privacy') }}" style="color:#a855f7;">Privacy Policy</a>.
+                </p>
+            </div>
+            <div style="display:flex;gap:12px;">
+                <button onclick="window.location.href='https://google.com'" style="flex:1;padding:12px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;color:#6b7280;font-size:14px;font-weight:500;cursor:pointer;">
+                    I Am Under 18
+                </button>
+                <button onclick="verifyAge()" style="flex:1;padding:12px;background:linear-gradient(135deg,#ec4899,#a855f7);border:none;border-radius:10px;color:white;font-size:14px;font-weight:600;cursor:pointer;">
+                    <i class="fas fa-check me-1"></i> I Am 18+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function verifyAge() {
+            fetch('/verify-age', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                },
+            }).then(res => {
+                if (res.ok) {
+                    document.getElementById('ageModal').style.display = 'none';
+                }
+            });
+        }
+    </script>
+    @endif
     
 </body>
 </html>

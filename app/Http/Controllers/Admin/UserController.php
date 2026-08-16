@@ -121,4 +121,40 @@ class UserController extends Controller
             'message' => "User {$user->status}",
         ]);
     }
+
+    // ── Profile Approval ──────────────────────────────────────
+
+    public function pendingApprovals()
+    {
+        $profiles = Profile::where('is_complete', true)
+            ->where('is_approved', false)
+            ->with('user')
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.users.pending-approvals', compact('profiles'));
+    }
+
+    public function approveProfile(int $profileId)
+    {
+        $profile = Profile::findOrFail($profileId);
+        $profile->update(['is_approved' => true, 'rejection_reason' => null]);
+
+        return back()->with('success', "Profile for {$profile->user->name} has been approved.");
+    }
+
+    public function rejectProfile(Request $request, int $profileId)
+    {
+        $request->validate([
+            'rejection_reason' => ['required', 'string', 'max:500'],
+        ]);
+
+        $profile = Profile::findOrFail($profileId);
+        $profile->update([
+            'is_approved' => false,
+            'rejection_reason' => $request->rejection_reason,
+        ]);
+
+        return back()->with('success', "Profile for {$profile->user->name} has been rejected.");
+    }
 }

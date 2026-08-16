@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             ContentSeeder::class,
             QuizAnswersSeeder::class,
             MatchSeeder::class,
+            PoemSeeder::class,
+            CategorySeeder::class,
+            ArticleSeeder::class,
+            StorySeeder::class,
         ]);
 
         $this->command->info('');

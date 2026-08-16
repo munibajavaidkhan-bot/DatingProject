@@ -20,7 +20,8 @@ class Profile extends Model
         'interests', 'languages', 'smoking', 'drinking', 'has_children',
         'wants_children', 'preferred_age_min', 'preferred_age_max',
         'preferred_distance_km', 'preferred_gender', 'preferred_religions',
-        'preferred_ethnicities', 'is_complete', 'is_verified', 'show_online',
+        'preferred_ethnicities', 'is_complete', 'is_approved', 'rejection_reason',
+        'is_verified', 'show_online',
         'last_active', 'profile_views', 'personality_type', 'quiz_score',
     ];
 
@@ -32,6 +33,7 @@ class Profile extends Model
         'preferred_religions'  => 'array',
         'preferred_ethnicities'=> 'array',
         'is_complete'          => 'boolean',
+        'is_approved'          => 'boolean',
         'is_verified'          => 'boolean',
         'show_online'          => 'boolean',
         'last_active'          => 'datetime',
@@ -82,6 +84,16 @@ class Profile extends Model
     public function scopeComplete($query)
     {
         return $query->where('is_complete', true);
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('is_approved', true);
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('is_complete', true)->where('is_approved', false);
     }
 
     public function scopeVerified($query)

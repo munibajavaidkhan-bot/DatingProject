@@ -15,7 +15,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
-        $middleware->trustHosts(at: ['datingproject-production.up.railway.app']); // Apni app ka link yahan dalein
         $middleware->alias([
             'admin'  => \App\Http\Middleware\AdminMiddleware::class,
             'author' => \App\Http\Middleware\AuthorMiddleware::class,

@@ -17,7 +17,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Alpine JS -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -26,17 +26,15 @@
     <link href="/assets/css/m-style.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
     <link href="/assets/css/newcss.css" rel="stylesheet">
+    <link href="/assets/css/site-header-footer.css" rel="stylesheet">
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
         h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', serif; }
         
-        /* Custom Navbar state for inner pages */
-        .navbar { background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 0;}
-        .navbar .nav-link { color: #333 !important; font-weight: 500; }
-        
+        /* Inner page hero */
         .inner-header {
-            padding: 160px 0 80px;
+            padding: 80px 0 80px;
             background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
             color: white;
             text-align: center;
@@ -118,31 +116,10 @@
 </head>
 <body x-data="documentController()">
 
-    <!-- Navigation (Matched to Welcome Page) -->
-    <nav class="navbar navbar-expand-lg fixed-top no-print">
-        <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/assets/images/love_logo.png" alt="The Love Project" height="50">
-            </a>
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/#how-it-works">How It Works</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/#features">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/#testimonials">Success Stories</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('pricing') }}">Pricing</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('terms') }}">Terms</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="{{ route('privacy') }}" style="color:#a855f7 !important;">Privacy</a></li>
-                    <li class="nav-item"><a class="nav-link btn-primary ms-3" href="{{ url('/login') }}" style="color:white !important; padding:10px 25px; border-radius:30px;">My Account</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <!-- Navigation (shared) -->
+    <div class="no-print">
+        @include('partials.site-header', ['active' => 'home'])
+    </div>
 
     <!-- Header Vector -->
     <div class="inner-header no-print">
@@ -320,75 +297,9 @@
         </div>
     </div>
 
-    <!-- Footer matched to welcome.blade.php -->
-    <footer class="footer-section no-print" style="margin-top:0;">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-4">
-                    <div class="footer-widget">
-                        <div class="footer-logo">
-                            <img src="/assets/images/love_logo.png" alt="The Love Project" class="img-fluid" style="filter: brightness(0) invert(1);">
-                        </div>
-                        <p>52 Weeks to Forever — lessons, quizzes & curated matches for meaningful, long-lasting love.</p>
-                    </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-6">
-                    <div class="footer-widget">
-                        <h4>Quick Links</h4>
-                        <ul>
-                            <li><a href="/">About Us</a></li>
-                            <li><a href="/#how-it-works">How It Works</a></li>
-                            <li><a href="{{ route('pricing') }}">Pricing</a></li>
-                            <li><a href="/">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-6">
-                    <div class="footer-widget">
-                        <h4>Features</h4>
-                        <ul>
-                            <li><a href="{{ route('member.content') }}">52 Lessons</a></li>
-                            <li><a href="{{ route('member.quiz') }}">Love Quiz</a></li>
-                            <li><a href="{{ route('member.matches') }}">Matches</a></li>
-                            <li><a href="{{ route('member.forum') }}">Community</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-lg-4">
-                    <div class="footer-widget">
-                        <h4>Newsletter</h4>
-                        <p>Don't miss out on love tips, success stories, and exclusive offers.</p>
-                        <div class="newsletter-form">
-                            <form>
-                                <div class="input-group">
-                                    <input type="email" class="form-control" placeholder="Your Email">
-                                    <button class="btn" type="submit"><i class="fas fa-paper-plane"></i></button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <div class="ftr-btm no-print">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">© 2018-2026 The Love Project. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <ul>
-                        <li><a href="{{ route('terms') }}">Terms</a></li>
-                        <li><a href="{{ route('privacy') }}">Privacy</a></li>
-                        <li><a href="#">Cookies</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <!-- Footer (shared) -->
+    <div class="no-print">
+        @include('partials.site-footer', ['active' => 'home'])
     </div>
 
     <!-- Scripts -->

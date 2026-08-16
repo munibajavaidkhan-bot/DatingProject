@@ -49,6 +49,10 @@ class LikeController extends Controller
             ->get();
 
         // My stats
+        $dailyLikes = UserLike::where('sender_id', $user->id)
+            ->whereDate('created_at', today())
+            ->count();
+
         $stats = [
             'likes_sent'     => UserLike::where('sender_id', $user->id)
                                   ->where('type', 'like')->count(),
@@ -58,7 +62,14 @@ class LikeController extends Controller
                                     $q->where('user_one_id', $user->id)
                                       ->orWhere('user_two_id', $user->id);
                                 })->where('status', 'accepted')->count(),
-            'super_likes_left' => 3, // daily limit
+            'super_likes_left' => max(0, 3 - UserLike::where('sender_id', $user->id)
+                                  ->where('type', 'super_like')
+                                  ->whereDate('created_at', today())->count()),
+            'daily_likes_used'  => $dailyLikes,
+            'daily_likes_limit' => $user->getMatchLimit(),
+            'daily_msgs_used'   => \App\Models\Message::where('sender_id', $user->id)
+                                  ->whereDate('created_at', today())->count(),
+            'daily_msgs_limit'  => $user->getMessageLimit(),
         ];
 
         return view('user.discover', compact('user', 'profiles', 'likedMe', 'stats'));
@@ -73,6 +84,22 @@ class LikeController extends Controller
 
         if ($userId === $user->id) {
             return response()->json(['error' => 'Cannot like yourself'], 422);
+        }
+
+        // Check daily like limit
+        $dailyLikes = UserLike::where('sender_id', $user->id)
+            ->whereDate('created_at', today())
+            ->count();
+        $limit = $user->getMatchLimit();
+
+        if ($dailyLikes >= $limit) {
+            return response()->json([
+                'error' => "You've reached your daily like limit ({$limit} likes). Upgrade for more!",
+                'upgrade' => true,
+                'plan_name' => $user->getCurrentPlan()?->name ?? 'Free',
+                'limit' => $limit,
+                'used' => $dailyLikes,
+            ], 422);
         }
 
         // Check already liked

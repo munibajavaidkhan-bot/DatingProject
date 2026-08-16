@@ -290,5 +290,20 @@ class LoveMatch extends Command
             'color'        => '#ec4899',
             'action_url'   => route('member.matches'),
         ]);
+
+        // Send email notification
+        try {
+            $match = UserMatch::where(function ($q) use ($to, $from) {
+                $q->where('user_one_id', $to->id)->where('user_two_id', $from->id);
+            })->orWhere(function ($q) use ($to, $from) {
+                $q->where('user_one_id', $from->id)->where('user_two_id', $to->id);
+            })->first();
+
+            if ($match) {
+                \Mail::to($to->email)->send(new \App\Mail\MatchNotificationMail($to, $from, $match));
+            }
+        } catch (\Exception $e) {
+            // Don't fail matching if email fails
+        }
     }
 }

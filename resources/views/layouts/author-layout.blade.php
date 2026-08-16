@@ -20,8 +20,14 @@
 <aside class="sidebar">
     <div style="padding:0 20px 20px;color:white;font-family:'Playfair Display',serif;font-weight:700;">Love Project</div>
     <a href="{{ route('author.dashboard') }}" class="{{ request()->routeIs('author.dashboard') ? 'active' : '' }}"><i class="fas fa-th-large"></i> Dashboard</a>
-    <a href="{{ route('author.blog.index') }}" class="{{ request()->routeIs('author.blog*') ? 'active' : '' }}"><i class="fas fa-newspaper"></i> My Articles</a>
-    <a href="{{ route('author.blog.create') }}"><i class="fas fa-plus"></i> New Article</a>
+    <a href="{{ route('author.blog.index') }}" class="{{ request()->routeIs('author.blog*') ? 'active' : '' }}"><i class="fas fa-newspaper"></i> My Blog Posts</a>
+    <a href="{{ route('author.blog.create') }}"><i class="fas fa-plus"></i> New Blog Post</a>
+    <a href="{{ route('author.articles.index') }}" class="{{ request()->routeIs('author.articles*') ? 'active' : '' }}"><i class="fas fa-file-lines"></i> My Articles</a>
+    <a href="{{ route('author.articles.create') }}"><i class="fas fa-plus"></i> New Article</a>
+    <a href="{{ route('author.stories.index') }}" class="{{ request()->routeIs('author.stories*') ? 'active' : '' }}"><i class="fas fa-book-open"></i> My Stories</a>
+    <a href="{{ route('author.stories.create') }}"><i class="fas fa-plus"></i> New Story</a>
+    <a href="{{ route('author.poems.index') }}" class="{{ request()->routeIs('author.poems*') ? 'active' : '' }}"><i class="fas fa-heart"></i> My Poems</a>
+    <a href="{{ route('author.poems.create') }}"><i class="fas fa-plus"></i> New Poem</a>
     <a href="{{ route('profile.edit') }}"><i class="fas fa-user"></i> Profile</a>
     <form method="POST" action="{{ route('logout') }}" style="margin-top:20px;padding:0 20px;">
         @csrf

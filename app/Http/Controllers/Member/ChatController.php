@@ -56,6 +56,12 @@ class ChatController extends Controller
         ));
     }
 
+    public function acceptSafetyDisclaimer()
+    {
+        Auth::user()->update(['safety_disclaimer_accepted' => true]);
+        return response()->json(['success' => true]);
+    }
+
     public function show(int $matchId)
     {
         $user  = Auth::user();
@@ -143,6 +149,17 @@ class ChatController extends Controller
 
         if ($match->status !== 'accepted') {
             return response()->json(['error' => 'Match not accepted'], 422);
+        }
+
+        // Check daily message limit
+        if ($user->hasExceededDailyMessages()) {
+            $plan = $user->getCurrentPlan();
+            $limit = $user->getMessageLimit();
+            return response()->json([
+                'error' => "You've reached your daily message limit ({$limit} messages).",
+                'upgrade' => true,
+                'plan_name' => $plan?->name ?? 'Free',
+            ], 422);
         }
 
         $receiverId = $match->user_one_id === $user->id
@@ -249,4 +266,51 @@ public function poll(Request $request, int $matchId)
 
     return response()->json(['messages' => $messages]);
 }
+
+    // ── Reactions ─────────────────────────────────────────────
+
+    public function toggleReaction(Request $request, int $messageId)
+    {
+        $request->validate([
+            'emoji' => ['required', 'string', 'max:4'],
+        ]);
+
+        $user = Auth::user();
+        $message = Message::findOrFail($messageId);
+
+        $existing = \App\Models\MessageReaction::where('message_id', $messageId)
+            ->where('user_id', $user->id)
+            ->where('emoji', $request->emoji)
+            ->first();
+
+        if ($existing) {
+            $existing->delete();
+            return response()->json(['action' => 'removed', 'emoji' => $request->emoji]);
+        }
+
+        \App\Models\MessageReaction::create([
+            'message_id' => $messageId,
+            'user_id'    => $user->id,
+            'emoji'      => $request->emoji,
+        ]);
+
+        return response()->json(['action' => 'added', 'emoji' => $request->emoji]);
+    }
+
+    public function getReactions(int $messageId)
+    {
+        $reactions = \App\Models\MessageReaction::where('message_id', $messageId)
+            ->with('user')
+            ->get()
+            ->groupBy('emoji')
+            ->map(function ($group) {
+                return [
+                    'count' => $group->count(),
+                    'users' => $group->pluck('user.name'),
+                    'emoji' => $group->first()->emoji,
+                ];
+            });
+
+        return response()->json(['reactions' => $reactions]);
+    }
 }

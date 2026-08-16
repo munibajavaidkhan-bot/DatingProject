@@ -41,6 +41,11 @@ class Message extends Model
         return $this->belongsTo(UserMatch::class, 'match_id');
     }
 
+    public function reactions()
+    {
+        return $this->hasMany(MessageReaction::class);
+    }
+
     // ─── Scopes ───────────────────────────────────────────────
     public function scopeUnread($query)
     {

@@ -51,12 +51,24 @@ class CompleteProfileController extends Controller
 
         $data['is_complete'] = true;
 
+        // Auto-approve admin and author profiles
+        if ($user->isAdmin() || $user->isAuthor()) {
+            $data['is_approved'] = true;
+        }
+
         if ($request->hasFile('profile_picture')) {
             $data['profile_picture'] = $request->file('profile_picture')
                 ->store('profile-photos', 'public');
         }
 
         Profile::updateOrCreate(['user_id' => $user->id], $data);
+
+        // Auto-geocode if lat/lng not set
+        $profile = $user->profile;
+        if ($profile && !$profile->latitude && $profile->city && $profile->country) {
+            $locationService = new \App\Services\LocationService();
+            $locationService->autoGeocode($profile);
+        }
 
         // Unlock first 4 weeks of content automatically
         $firstFourWeeks = ContentWeek::where('week_number', '<=', 4)

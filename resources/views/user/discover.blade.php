@@ -8,12 +8,12 @@
 
 {{-- Stats Bar --}}
 <div class="row g-3 mb-4">
-    @foreach([
-        ['💕', 'Likes Sent',     $stats['likes_sent'],     '#ec4899', '#fce7f3'],
-        ['❤️', 'Likes Received', $stats['likes_received'], '#a855f7', '#f3e8ff'],
-        ['🎉', 'Matches',        $stats['mutual_matches'],  '#22c55e', '#dcfce7'],
-        ['⭐', 'Super Likes',    $stats['super_likes_left'],'#f59e0b', '#fef3c7'],
-    ] as [$emoji, $label, $value, $color, $bg])
+@foreach([
+    ['💕', 'Likes Sent',     $stats['daily_likes_used'] . '/' . $stats['daily_likes_limit'] . ' today',  '#ec4899', '#fce7f3'],
+    ['❤️', 'Likes Received', $stats['likes_received'], '#a855f7', '#f3e8ff'],
+    ['🎉', 'Matches',        $stats['mutual_matches'],  '#22c55e', '#dcfce7'],
+    ['⭐', 'Super Likes',    $stats['super_likes_left'] . ' left today','#f59e0b', '#fef3c7'],
+] as [$emoji, $label, $value, $color, $bg])
     <div class="col-6 col-md-3">
         <div class="glass-card text-center" style="padding:16px;">
             <div style="font-size:24px;margin-bottom:6px;">{{ $emoji }}</div>
@@ -111,6 +111,12 @@
                             <div style="font-size:13px;opacity:0.85;">
                                 <i class="fas fa-location-dot me-1"></i>
                                 {{ $profile->profile?->city ?? 'Unknown' }}
+                                @php $dist = auth()->user()->distanceTo($profile); @endphp
+                                @if($dist !== null)
+                                    <span style="margin-left:6px;font-size:11px;opacity:0.7;">
+                                        (<i class="fas fa-road me-1"></i>{{ round($dist) }} km)
+                                    </span>
+                                @endif
                                 @if($profile->profile?->occupation)
                                 · {{ $profile->profile->occupation }}
                                 @endif
