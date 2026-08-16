@@ -25,10 +25,10 @@
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
     
     <!-- Custom CSS -->
-    <link href="assets/css/m-style.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/newcss.css" rel="stylesheet">
-    <link href="assets/css/site-header-footer.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/m-style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/newcss.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/site-header-footer.css') }}" rel="stylesheet">
     
     <!-- WOW.js Animation CSS -->
     <style>
@@ -67,7 +67,7 @@
         <!-- Hero Section -->
         <section class="home-bannerwrp" id="home">
             <video autoplay muted loop playsinline class="banner-bg-video">
-                <source src="assets/videos/dessds.mp4" type="video/mp4">
+                <source src="{{ asset('assets/videos/dessds.mp4') }}" type="video/mp4">
             </video>
             
             <div class="container">
@@ -112,7 +112,7 @@
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6">
                         <div class="feature-image wow animate-zoom" data-wow-duration="1s">
-                            <img src="assets/images/romantic-couple-taking-selfie-together-on-the-beac-2025-04-02-14-25-57-utc.jpg" alt="Romantic Couple" class="img-fluid">
+                            <img src="{{ asset('assets/images/romantic-couple-taking-selfie-together-on-the-beac-2025-04-02-14-25-57-utc.jpg') }}" alt="Romantic Couple" class="img-fluid">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -136,7 +136,7 @@
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6">
                         <div class="step-card wow animate-zoom" data-wow-duration="1s">
-                            <img src="assets/images/43434343.png" alt="Create Profile" class="animate-float">
+                            <img src="{{ asset('assets/images/43434343.png') }}" alt="Create Profile" class="animate-float">
                             <h4>Create Your Profile</h4>
                             <p>Share your authentic self - your values, passions, and life journey. We believe in real connections, not just perfect profiles.</p>
                             <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="step-card wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.2s">
-                            <img src="assets/images/2121.png" alt="Take Quiz" class="animate-float">
+                            <img src="{{ asset('assets/images/2121.png') }}" alt="Take Quiz" class="animate-float">
                             <h4>Take the Love Quiz</h4>
                             <p>Discover your relationship style through our psychology-based assessment. Find matches that truly complement your personality.</p>
                             <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
@@ -152,7 +152,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="step-card wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.4s">
-                            <img src="assets/images/ewewe.png" alt="Meet Match" class="animate-float">
+                            <img src="{{ asset('assets/images/ewewe.png') }}" alt="Meet Match" class="animate-float">
                             <h4>Meet Your Match</h4>
                             <p>Receive curated matches weekly and start meaningful conversations with people who share your vision for love and connection.</p>
                             <a href="#">Learn More <i class="fas fa-arrow-right"></i></a>
@@ -183,9 +183,9 @@
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6">
                         <div class="image-grid">
-                            <img src="assets/images/ffdfdffd.jpg" alt="Create Account" class="main-image img-fluid wow animate-slide-left" data-wow-duration="1s">
-                            <img src="assets/images/dsdsdsdds.png" alt="Icon" class="floating-image-1 wow animate-zoom" data-wow-duration="0.8s" data-wow-delay="1s">
-                            <img src="assets/images/3rd-fold-right-icon.png" alt="Icon" class="floating-image-2 wow animate-zoom" data-wow-duration="0.8s" data-wow-delay="1.3s">
+                            <img src="{{ asset('assets/images/ffdfdffd.jpg') }}" alt="Create Account" class="main-image img-fluid wow animate-slide-left" data-wow-duration="1s">
+                            <img src="{{ asset('assets/images/dsdsdsdds.png') }}" alt="Icon" class="floating-image-1 wow animate-zoom" data-wow-duration="0.8s" data-wow-delay="1s">
+                            <img src="{{ asset('assets/images/3rd-fold-right-icon.png') }}" alt="Icon" class="floating-image-2 wow animate-zoom" data-wow-duration="0.8s" data-wow-delay="1.3s">
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -221,48 +221,48 @@
         <div class="circular-professions">
           <!-- Center Circle -->
           <div class="center-circle">
-            <img src="assets/images/circle.png" alt="Love Circle" class="rotating-circle">
+            <img src="{{ asset('assets/images/circle.png') }}" alt="Love Circle" class="rotating-circle">
           </div>
           
           <!-- Profession Cards in Circle Layout -->
           <div class="profession-card card-1 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="0.2s">
             <div class="card-content">
-              <img src="assets/images/img-1.png" alt="Fashion Designer">
+              <img src="{{ asset('assets/images/img-1.png') }}" alt="Fashion Designer">
               <h4>Fashion Designer</h4>
             </div>
           </div>
 
           <div class="profession-card card-2 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="0.4s">
             <div class="card-content">
-              <img src="assets/images/img-2.png" alt="Business Developer">
+              <img src="{{ asset('assets/images/img-2.png') }}" alt="Business Developer">
               <h4>Business Developer</h4>
             </div>
           </div>
 
           <div class="profession-card card-3 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="0.6s">
             <div class="card-content">
-              <img src="assets/images/img-3.png" alt="Sales Man">
+              <img src="{{ asset('assets/images/img-3.png') }}" alt="Sales Man">
               <h4>Sales Man</h4>
             </div>
           </div>
 
           <div class="profession-card card-4 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="0.8s">
             <div class="card-content">
-              <img src="assets/images/img-4.png" alt="Copy Writer">
+              <img src="{{ asset('assets/images/img-4.png') }}" alt="Copy Writer">
               <h4>Copy Writer</h4>
             </div>
           </div>
 
           <div class="profession-card card-5 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="1.0s">
             <div class="card-content">
-              <img src="assets/images/img-5.png" alt="Machine Operator">
+              <img src="{{ asset('assets/images/img-5.png') }}" alt="Machine Operator">
               <h4>Machine Operator</h4>
             </div>
           </div>
 
           <div class="profession-card card-6 wow zoomIn" data-wow-duration="0.5s" data-wow-delay="1.2s">
             <div class="card-content">
-              <img src="assets/images/img-6.png" alt="Professional Chef">
+              <img src="{{ asset('assets/images/img-6.png') }}" alt="Professional Chef">
               <h4>Professional Chef</h4>
             </div>
           </div>
@@ -282,28 +282,28 @@
                 <div class="row g-4">
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-card wow animate-zoom" data-wow-duration="0.5s">
-                            <img src="assets/images/review.svg" alt="Community">
+                            <img src="{{ asset('assets/images/review.svg') }}" alt="Community">
                             <h4>Awesome Community</h4>
                             <p>Join millions of authentic singles looking for real connections and meaningful relationships.</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-card wow animate-zoom" data-wow-duration="0.5s" data-wow-delay="0.1s">
-                            <img src="assets/images/network.svg" alt="Members">
+                            <img src="{{ asset('assets/images/network.svg') }}" alt="Members">
                             <h4>10M+ Members</h4>
                             <p>Connect with a diverse, global community of like-minded individuals seeking lasting love.</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-card wow animate-zoom" data-wow-duration="0.5s" data-wow-delay="0.2s">
-                            <img src="assets/images/laptop.svg" alt="Groups">
+                            <img src="{{ asset('assets/images/laptop.svg') }}" alt="Groups">
                             <h4>Private Groups</h4>
                             <p>Join exclusive communities based on your interests, hobbies, and relationship goals.</p>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="feature-card wow animate-zoom" data-wow-duration="0.5s" data-wow-delay="0.3s">
-                            <img src="assets/images/chat.svg" alt="Forums">
+                            <img src="{{ asset('assets/images/chat.svg') }}" alt="Forums">
                             <h4>Friendly Forums</h4>
                             <p>Engage in meaningful discussions and get relationship advice from our community.</p>
                         </div>
@@ -329,7 +329,7 @@
                 <div class="row g-4">
                     <div class="col-lg-4">
                         <div class="testimonial-card wow animate-zoom" data-wow-duration="0.5s">
-                            <img src="assets/images/testi-1.png" alt="Elton J. Dennie">
+                            <img src="{{ asset('assets/images/testi-1.png') }}" alt="Elton J. Dennie">
                             <p>"I never thought I'd find someone who truly understands me. The Love Project's matching algorithm is incredible - it connected me with my soulmate in just weeks!"</p>
                             <h5>Elton J. Dennie</h5>
                             <span>Happy Member</span>
@@ -337,7 +337,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="testimonial-card wow animate-zoom" data-wow-duration="0.5s" data-wow-delay="0.2s">
-                            <img src="assets/images/testi-2.png" alt="Sarah J. Parker">
+                            <img src="{{ asset('assets/images/testi-2.png') }}" alt="Sarah J. Parker">
                             <p>"The 52-week journey transformed how I approach relationships. The weekly lessons and quizzes helped me understand myself and what I truly want in a partner."</p>
                             <h5>Sarah J. Parker</h5>
                             <span>Premium Member</span>
@@ -345,7 +345,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="testimonial-card wow animate-zoom" data-wow-duration="0.5s" data-wow-delay="0.4s">
-                            <img src="assets/images/testi-3.png" alt="Michael R. Smith">
+                            <img src="{{ asset('assets/images/testi-3.png') }}" alt="Michael R. Smith">
                             <p>"Finally, a dating platform that focuses on quality over quantity! I met my fiancé here, and we're getting married next spring. Thank you, Love Project!"</p>
                             <h5>Michael R. Smith</h5>
                             <span>Success Story</span>
@@ -366,7 +366,7 @@
                 <div class="row g-4">
                     <div class="col-lg-6">
                         <div class="package-card wow animate-zoom" data-wow-duration="1s">
-                            <img src="assets/images/222.webp" alt="52 Weekly Lessons">
+                            <img src="{{ asset('assets/images/222.webp') }}" alt="52 Weekly Lessons">
                             <div class="package-content">
                                 <h3>52 Weekly Lessons</h3>
                                 <p>Short, practical self-development lessons to help you grow emotionally and communicate better in relationships.</p>
@@ -375,7 +375,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="package-card wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.2s">
-                            <img src="assets/images/23232.webp" alt="Deep Personality Matches">
+                            <img src="{{ asset('assets/images/23232.webp') }}" alt="Deep Personality Matches">
                             <div class="package-content">
                                 <h3>Deep Personality Matches</h3>
                                 <p>Matches based on values, emotional intelligence, and long-term compatibility - not just appearance or superficial interests.</p>
@@ -384,7 +384,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="package-card wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.4s">
-                            <img src="assets/images/istockphoto-1338846887-170667a.jpg" alt="Safe & Private Chat">
+                            <img src="{{ asset('assets/images/istockphoto-1338846887-170667a.jpg') }}" alt="Safe & Private Chat">
                             <div class="package-content">
                                 <h3>Safe & Private Chat</h3>
                                 <p>Double-moderated environment with AI protection and human moderation to keep your experience positive and secure.</p>
@@ -393,7 +393,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="package-card wow animate-zoom" data-wow-duration="1s" data-wow-delay="0.6s">
-                            <img src="assets/images/r2-.jpg" alt="Quality Over Quantity">
+                            <img src="{{ asset('assets/images/r2-.jpg') }}" alt="Quality Over Quantity">
                             <div class="package-content">
                                 <h3>Quality Over Quantity</h3>
                                 <p>We focus on meaningful matches rather than endless swiping, respecting your time and emotional investment.</p>
@@ -411,9 +411,9 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/mlib.js"></script>
-    <script src="assets/js/functions.js"></script>
-    <script src="assets/js/canvas.js"></script>
+    <script src="{{ asset('assets/js/mlib.js') }}"></script>
+    <script src="{{ asset('assets/js/functions.js') }}"></script>
+    <script src="{{ asset('assets/js/canvas.js') }}"></script>
     
     <script>
         // Page Loader
