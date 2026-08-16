@@ -23,10 +23,10 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <!-- Custom CSS (Matching main site) -->
-    <link href="{{ asset('assets/css/m-style.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/newcss.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/site-header-footer.css') }}" rel="stylesheet">
+    <link href="/assets/css/m-style.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/newcss.css" rel="stylesheet">
+    <link href="/assets/css/site-header-footer.css" rel="stylesheet">
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
