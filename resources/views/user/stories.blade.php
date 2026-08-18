@@ -107,11 +107,11 @@
     @empty
     <div class="grid-empty" style="grid-column:1/-1">
       <h3>No stories found</h3>
-      <p>Is category me abhi koi story nahi hai &mdash; jald hi add hogi. &#128151;</p>
+      <p>No stories in this category yet &mdash; new ones coming soon. &#128151;</p>
     </div>
     @endforelse
   </div>
-  <p class="empty" id="empty">Is category me abhi koi story nahi hai &mdash; jald hi add hogi. &#128151;</p>
+  <p class="empty" id="empty">No stories in this category yet &mdash; new ones coming soon. &#128151;</p>
 
   @if($stories->hasPages())
   <nav class="pagination">

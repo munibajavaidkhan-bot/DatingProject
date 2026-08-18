@@ -41,6 +41,7 @@ class StorySeeder extends Seeder
                 'title'         => $story['title'],
                 'slug'          => $slug,
                 'category'      => $story['category'],
+                'category_id'   => \App\Models\Category::where('slug', $story['category'])->value('id'),
                 'excerpt'       => $story['excerpt'],
                 'body'          => $story['body'],
                 'cover_image'   => $story['cover_image'] ?? null,

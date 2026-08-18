@@ -15,13 +15,13 @@ class DatabaseSeeder extends Seeder
             SampleUsersSeeder::class,
             QuizQuestionSeeder::class,
             PlansSeeder::class,
+            CategorySeeder::class,
+            PoemSeeder::class,
+            ArticleSeeder::class,
+            StorySeeder::class,
             ContentSeeder::class,
             QuizAnswersSeeder::class,
             MatchSeeder::class,
-            PoemSeeder::class,
-            CategorySeeder::class,
-            ArticleSeeder::class,
-            StorySeeder::class,
         ]);
 
         $this->command->info('');

@@ -60,7 +60,7 @@
     <div class="sec-head reveal">
       <span class="eyebrow">Words From The Heart</span>
       <h2>Ten Poems, Ten <em>Feelings</em></h2>
-      <p>Har card ek ehsaas hai — jo shayad aap ne kabhi lafzon me na kaha ho.</p>
+      <p>Every card holds a feeling — one you may have never put into words before.</p>
     </div>
 
     <div class="grid">
@@ -75,7 +75,7 @@
       @empty
       <div class="empty" style="grid-column:1/-1">
         <h3>No poems found</h3>
-        <p>Kuchh bhi nahi mila — thodi aur koshish karein ya baad me aayein.</p>
+        <p>No results found — try a different search or check back later.</p>
       </div>
       @endforelse
     </div>

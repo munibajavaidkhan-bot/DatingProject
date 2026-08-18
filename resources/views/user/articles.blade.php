@@ -88,11 +88,11 @@
     @empty
     <div class="grid-empty" style="grid-column:1/-1">
       <h3>No articles found</h3>
-      <p>Is category me abhi koi article nahi hai &mdash; jald hi add honge. &#128151;</p>
+      <p>No articles in this category yet &mdash; new ones coming soon. &#128151;</p>
     </div>
     @endforelse
   </div>
-  <p class="empty" id="empty">Is category me abhi koi article nahi hai &mdash; jald hi add honge. &#128151;</p>
+  <p class="empty" id="empty">No articles in this category yet &mdash; new ones coming soon. &#128151;</p>
 
   @if($articles->hasPages())
   <nav class="pagination">

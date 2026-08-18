@@ -25,7 +25,7 @@
     <div class="col-md-6">
         <label class="form-label fw-semibold">Cover Image — Upload</label>
         <input type="file" name="cover_image_file" class="form-control" accept="image/*">
-        <div class="form-text">Ya phir niche se existing asset choose karein. Max 4MB.</div>
+        <div class="form-text">Or choose an existing asset from below. Max 4MB.</div>
         @if(!empty($poem->cover_image))
         <div class="mt-2 d-flex align-items-center gap-2">
             <img src="{{ str_starts_with($poem->cover_image, 'poems/') ? asset('storage/' . $poem->cover_image) : asset('assets/images/' . $poem->cover_image) }}"
@@ -43,7 +43,7 @@
             <option value="{{ $file }}" {{ old('cover_image', $poem->cover_image ?? '') === $file ? 'selected' : '' }}>{{ $file }}</option>
             @endforeach
         </select>
-        <div class="form-text">Upload karke nayi image lagayein, ya apni koi existing image choose karein.</div>
+        <div class="form-text">Upload a new image, or select an existing one from the list above.</div>
     </div>
 
     <div class="col-12">

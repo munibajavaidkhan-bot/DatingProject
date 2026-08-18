@@ -41,6 +41,7 @@ class ArticleSeeder extends Seeder
                 'title'         => $article['title'],
                 'slug'          => $slug,
                 'category'      => $article['category'],
+                'category_id'   => \App\Models\Category::where('slug', $article['category'])->value('id'),
                 'excerpt'       => $article['excerpt'],
                 'body'          => $article['body'],
                 'cover_image'   => $article['cover_image'] ?? null,

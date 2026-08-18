@@ -52,6 +52,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 20,
                 'is_premium'        => false,
+                'is_published'      => true,
             ],
             [
                 'week_number' => 2,
@@ -78,6 +79,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 25,
                 'is_premium'        => false,
+                'is_published'      => true,
             ],
             [
                 'week_number' => 3,
@@ -104,6 +106,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 20,
                 'is_premium'        => false,
+                'is_published'      => true,
             ],
             [
                 'week_number' => 4,
@@ -130,6 +133,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 20,
                 'is_premium'        => false,
+                'is_published'      => true,
             ],
             [
                 'week_number' => 5,
@@ -156,6 +160,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 20,
                 'is_premium'        => true,
+                'is_published'      => true,
             ],
         ];
 
@@ -205,6 +210,7 @@ class ContentSeeder extends Seeder
                 ],
                 'estimated_minutes' => 20,
                 'is_premium'        => $i > 4,
+                'is_published'      => true,
             ];
         }
 

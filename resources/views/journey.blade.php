@@ -57,7 +57,7 @@ ul{list-style:none}
 .chip b{display:block;font-size:13px;color:var(--pink);line-height:1.15}
 .chip small{display:block;font-size:10px;color:#8a8fa3}
 
-/* right visual: .hero ka direct child = viewport right edge tak full bleed */
+/* right visual: .hero direct child = full bleed to viewport right edge */
 .hero-visual{position:absolute;top:0;right:0;bottom:0;width:50%;z-index:1}
 .hero-still{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;object-fit:cover;
   -webkit-mask-image:linear-gradient(to right,rgba(0,0,0,0) 0%,rgba(0,0,0,1) 32%);
@@ -188,7 +188,7 @@ ul{list-style:none}
     </div>
   </div>
 
-  <!-- visual ab .hero ka direct child = kabhi hide/clip nahi hoga -->
+  <!-- visual: .hero direct child = will never be hidden/clipped -->
   <div class="hero-visual">
     <img class="hero-still" src="{{ asset('images/02_hero_flowers_vase.jpg') }}" alt="" loading="eager">
     <img class="hero-book" src="{{ asset('images/01_hero_book.jpg') }}" alt="The Love Project book" loading="eager">

@@ -12,11 +12,18 @@ class AuthorPageController extends Controller
 {
     public function show(string $slug)
     {
-        $name = str_replace('-', ' ', $slug);
-
+        // Try exact slug match first (name -> slug comparison)
         $author = User::where('role', 'author')
-            ->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($name) . '%'])
-            ->firstOrFail();
+            ->whereRaw("REPLACE(LOWER(name), ' ', '-') = ?", [$slug])
+            ->first();
+
+        // Fallback: try LIKE match
+        if (!$author) {
+            $name = str_replace('-', ' ', $slug);
+            $author = User::where('role', 'author')
+                ->whereRaw("LOWER(name) LIKE ?", ['%' . strtolower($name) . '%'])
+                ->firstOrFail();
+        }
 
         $articles = Article::published()
             ->where('user_id', $author->id)

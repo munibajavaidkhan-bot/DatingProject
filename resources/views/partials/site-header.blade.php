@@ -15,7 +15,12 @@
     <a href="{{ url('/') }}" class="{{ ($active ?? '') === 'home' ? 'active' : '' }}">Home</a>
     <a href="{{ url('/#how-it-works') }}">How It Works</a>
     <a href="{{ route('journey') }}">52 Weeks</a>
-    <a href="{{ route('author.page', 'james-anderson') }}" class="{{ ($active ?? '') === 'author' ? 'active' : '' }}">Author</a>
+    @php
+        $siteAuthor = \App\Models\User::where('role', 'author')->first();
+    @endphp
+    @if($siteAuthor)
+    <a href="{{ route('author.page', \Illuminate\Support\Str::slug($siteAuthor->name)) }}" class="{{ ($active ?? '') === 'author' ? 'active' : '' }}">Author</a>
+    @endif
     @if(($active ?? '') === 'articles')
     <a href="{{ route('articles.index') }}" class="active">Articles</a>
     @elseif(($active ?? '') === 'stories')

@@ -144,8 +144,8 @@ class LoveMatch extends Command
             $question = $ansA->question;
             $weight   = $question ? $question->weight : 1;
 
-            $valA = is_array($ansA->answer) ? $ansA->answer : [$ansA->answer];
-            $valB = is_array($answersB[$qId]->answer) ? $answersB[$qId]->answer : [$answersB[$qId]->answer];
+            $valA = is_array($ansA->answer) ? array_filter($ansA->answer, 'is_scalar') : [$ansA->answer];
+            $valB = is_array($answersB[$qId]->answer) ? array_filter($answersB[$qId]->answer, 'is_scalar') : [$answersB[$qId]->answer];
 
             $totalWeight += $weight;
 
