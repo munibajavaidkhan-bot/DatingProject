@@ -22,3 +22,10 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/database/database.sqlite
+/storage/framework/views
+/storage/logs
+temp_ssh.ps1
+temp_deploy.ps1
+composer_out.log
+composer_err.log

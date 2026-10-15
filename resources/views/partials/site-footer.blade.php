@@ -47,7 +47,7 @@
 
     <div class="footer-bottom">
       <span>&copy; {{ date('Y') }} The Love Project. All rights reserved.</span>
-      <nav><a href="{{ route('terms') }}">Terms</a><a href="{{ route('privacy') }}">Privacy</a><a href="#">Cookies</a></nav>
+      <nav><a href="{{ route('terms') }}">Terms</a><a href="{{ route('privacy') }}">Privacy</a><a href="{{ route('acceptable.use') }}">Acceptable Use</a><a href="{{ route('law.enforcement') }}">Law Enforcement</a><a href="#">Cookies</a></nav>
     </div>
   </div>
 </footer>

@@ -107,7 +107,7 @@
         [x-cloak] { display: none !important; }
 
         @media print {
-            .no-print { display: none !important; }
+            .no-print, .site-header { display: none !important; }
             body { background: white; }
             .doc-card { border: none; box-shadow: none; padding: 0; }
             .section-block { page-break-inside: avoid; }
@@ -117,9 +117,7 @@
 <body x-data="documentController()">
 
     <!-- Navigation (shared) -->
-    <div class="no-print">
-        @include('partials.site-header', ['active' => 'home'])
-    </div>
+    @include('partials.site-header', ['active' => 'home'])
 
     <!-- Header Vector -->
     <div class="inner-header no-print">

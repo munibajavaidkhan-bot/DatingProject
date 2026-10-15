@@ -44,6 +44,8 @@ Route::post('/verify-age', function () {
 Route::get('/pricing', [PlanController::class, 'publicIndex'])->name('pricing');
 Route::get('/terms', fn() => view('terms'))->name('terms');
 Route::get('/privacy', fn() => view('privacy'))->name('privacy');
+Route::get('/acceptable-use', fn() => view('acceptable-use'))->name('acceptable.use');
+Route::get('/law-enforcement', fn() => view('law-enforcement'))->name('law.enforcement');
 
 // ── Poems (public) ────────────────────────────────────────────
 Route::get('/poems', [PoemController::class, 'index'])->name('poems.index');

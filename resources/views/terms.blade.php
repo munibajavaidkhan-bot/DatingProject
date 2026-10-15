@@ -104,7 +104,7 @@
         [x-cloak] { display: none !important; }
 
         @media print {
-            .no-print { display: none !important; }
+            .no-print, .site-header { display: none !important; }
             body { background: white; }
             .doc-card { border: none; box-shadow: none; padding: 0; }
             .section-block { page-break-inside: avoid; }
@@ -114,14 +114,12 @@
 <body x-data="documentController()">
 
     <!-- Navigation (shared) -->
-    <div class="no-print">
-        @include('partials.site-header', ['active' => 'home'])
-    </div>
+    @include('partials.site-header', ['active' => 'home'])
 
     <!-- Header Vector -->
     <div class="inner-header no-print">
         <div class="container">
-            <span class="badge bg-white text-danger px-3 py-2 rounded-pill mb-3 shadow-sm">Updated: March 12, 2026</span>
+            <span class="badge bg-white text-danger px-3 py-2 rounded-pill mb-3 shadow-sm">Updated: October 15, 2026</span>
             <h1>Terms & Conditions</h1>
             <p class="lead">The Love Project – 52-Week Dating Journey</p>
             
@@ -184,11 +182,14 @@
                             </div>
                         </section>
 
-                        <section id="section-2" class="section-block" data-title="2. Eligibility">
-                            <h2><span class="section-number">2</span> Eligibility</h2>
+                        <section id="section-2" class="section-block" data-title="2. Eligibility & Age Verification">
+                            <h2><span class="section-number">2</span> Eligibility &amp; Age Verification</h2>
                             <ul>
-                                <li><strong>Age Requirement:</strong> Users must be 18 years or older. Use by minors is strictly prohibited.</li>
-                                <li><strong>Legal Capacity:</strong> By using the Platform, you confirm legal capacity under US law to enter into binding agreements.</li>
+                                <li><strong>Age requirement:</strong> You must be at least 18 years old to create an account or use the Platform. Use by anyone under 18 is strictly prohibited.</li>
+                                <li><strong>Age check at sign-up:</strong> Every user must enter their date of birth and confirm they are 18 or older when registering. Registration is automatically refused if the date of birth shows the person is under 18.</li>
+                                <li><strong>Accounts belonging to minors:</strong> If we learn or reasonably suspect that an account belongs to someone under 18, we will suspend it immediately, delete it, and, where content suggests a child may be at risk, report it to the appropriate authorities (see Section 4A).</li>
+                                <li><strong>False information:</strong> Giving a false date of birth or false identity information is a serious breach of these Terms and will result in permanent removal.</li>
+                                <li><strong>Legal capacity:</strong> By using the Platform you confirm you have the legal capacity to enter into a binding agreement.</li>
                             </ul>
                         </section>
 
@@ -207,15 +208,48 @@
 
                         <section id="section-4" class="section-block" data-title="4. Prohibited Conduct">
                             <h2><span class="section-number">4</span> Prohibited Conduct</h2>
-                            <p class="fw-bold text-dark">Users must not:</p>
+                            <p>Your use of the Platform is also governed by our <a href="{{ route('acceptable.use') }}" class="text-danger fw-bold text-decoration-none">Acceptable Use Policy</a>, which forms part of these Terms. You must not use the Platform, its community areas or its messaging features to:</p>
                             <ul>
-                                <li>Harass, threaten, stalk, shame, or manipulate others</li>
-                                <li>Share explicit sexual content or solicit sexual services</li>
-                                <li>Promote hate, discrimination, or abusive behavior</li>
-                                <li>Share private contact details publicly</li>
-                                <li>Engage in scams, impersonation, or financial requests</li>
-                                <li>Pressure others into emotional or romantic decisions</li>
+                                <li>Engage in or facilitate human trafficking, including sexual exploitation, forced labour, or recruiting, transporting, harbouring or advertising any person for exploitation.</li>
+                                <li>Buy, sell, offer or solicit sexual services, escorting, or companionship in exchange for money, gifts or other benefit.</li>
+                                <li>Commit, threaten, promote, glorify or depict sexual violence, including rape, sexual assault, sexual coercion or sextortion.</li>
+                                <li>Share, threaten to share or request non-consensual content, including intimate or sexual images or videos of anyone without their consent, secretly recorded material, and fake or AI-generated sexual images of a real person.</li>
+                                <li>Aid, abet, encourage or incite abuse of any kind, including physical, sexual, emotional, financial or domestic abuse, or coercive control, or help anyone carry out such abuse.</li>
+                                <li>Sexualise, groom or exploit minors, or share any content that sexualises anyone under 18.</li>
+                                <li>Harass, threaten, stalk, shame, intimidate or manipulate others.</li>
+                                <li>Share explicit sexual content.</li>
+                                <li>Promote hate, discrimination, violence or abusive behaviour.</li>
+                                <li>Share anyone's private contact details or personal information without their consent.</li>
+                                <li>Engage in scams, romance fraud, impersonation or requests for money.</li>
+                                <li>Pressure others into emotional, sexual or romantic decisions.</li>
                             </ul>
+                        </section>
+
+                        <section id="section-4a" class="section-block" data-title="4A. Zero Tolerance">
+                            <h2><span class="section-number">4A</span> Zero Tolerance: Trafficking, Sexual Exploitation, Sexual Violence &amp; Child Safety</h2>
+                            <p>The Love Project has a zero-tolerance policy for human trafficking, sexual exploitation, sexual violence, non-consensual content, the abuse of any person, and any content involving the sexual exploitation of minors. If we find this type of activity or content, we will:</p>
+                            <ul>
+                                <li>remove the content and permanently ban the accounts involved, without warning or refund;</li>
+                                <li>preserve relevant account data and records as evidence;</li>
+                                <li>report suspected child sexual exploitation material to the National Center for Missing &amp; Exploited Children (NCMEC) CyberTipline, as required by law, and report suspected trafficking or other serious crimes to the relevant law enforcement authorities;</li>
+                                <li>cooperate fully with law enforcement investigations, in line with our <a href="{{ route('law.enforcement') }}" class="text-danger fw-bold text-decoration-none">Law Enforcement Guidelines</a>.</li>
+                            </ul>
+                        </section>
+
+                        <section id="section-4b" class="section-block" data-title="4B. Reporting & Enforcement">
+                            <h2><span class="section-number">4B</span> Reporting &amp; Enforcement</h2>
+                            <ul>
+                                <li>Every profile, message and community post has a Report option. You can also block any user at any time.</li>
+                                <li>You can email reports to <a href="mailto:safety@luv54.com" class="text-danger fw-bold text-decoration-none">safety@luv54.com</a>.</li>
+                                <li>Reports involving trafficking, sexual violence, non-consensual content, threats or minors are prioritised and reviewed within <strong>24</strong> hours.</li>
+                                <li>Depending on severity, we may remove content, issue a warning, restrict features, suspend, or permanently ban an account.</li>
+                                <li>If anyone is in immediate danger, contact your local emergency services first (911 in the US, 112 or 999 in Ireland, the UK and the EU).</li>
+                            </ul>
+                        </section>
+
+                        <section id="section-4c" class="section-block" data-title="4C. Law Enforcement Cooperation">
+                            <h2><span class="section-number">4C</span> Cooperation with Law Enforcement</h2>
+                            <p>We cooperate with law enforcement and may disclose account information where we are legally required to, or where we believe in good faith that disclosure is necessary to prevent death or serious physical harm, to protect a child, or to investigate trafficking, exploitation or other serious crime. Our process for handling requests is set out in our <a href="{{ route('law.enforcement') }}" class="text-danger fw-bold text-decoration-none">Law Enforcement Guidelines</a>.</p>
                         </section>
 
                         <section id="section-5" class="section-block" data-title="5. No Professional Advice">
